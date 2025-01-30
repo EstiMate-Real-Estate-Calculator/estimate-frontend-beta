@@ -1,0 +1,19 @@
+name: Check Secrets
+
+on:
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if secret is set
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL is not set or is empty"
+          else
+            echo "DATABASE_URL is set (value is hidden for security)"
+          fi
+        env:
+          MY_SECRET: ${{ secrets.DATABASE_URL }} # Replace with your secret name
