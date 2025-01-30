@@ -7,8 +7,6 @@ on:
       - develop
   workflow_dispatch: # Allows manual triggering of the workflow
 
-name: Deploy to DigitalOcean
-
 env:
   DROPLET_IP: ${{ vars.DROPLET_IP }} # IP address of your DigitalOcean droplet
   DROPLET_USER: ${{ vars.DROPLET_USER }} # SSH user for the droplet (e.g., root)
