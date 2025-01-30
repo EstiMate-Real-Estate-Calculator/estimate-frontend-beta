@@ -10,11 +10,7 @@ jobs:
     steps:
       - name: Check if secret is set
         run: |
-          if [ -z "secrets.DATABASE_URL" ]; then
-            echo "DATABASE_URL is not set or is empty"
-          else
-            echo "DATABASE_URL is set (value is hidden for security) $DATABASE_URL"
-          fi
+          echo "The secret is ${{ secrets.DATABASE_URL }}"
         env:
           MY_SECRET_1: ${{ secrets.DATABASE_URL }} # Replace with your secret name
           MY_SECRET_2: ${{secrets.STRIPE_SECRET_KEY}}
