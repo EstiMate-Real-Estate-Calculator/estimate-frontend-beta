@@ -1,4 +1,4 @@
-name: Check Secrets
+name: deploy
 
 on:
   push: # Triggers the workflow when code is pushed to the repository
@@ -7,16 +7,50 @@ on:
       - develop
   workflow_dispatch: # Allows manual triggering of the workflow
 
+name: Deploy to DigitalOcean
+
+env:
+  DROPLET_IP: ${{ vars.DROPLET_IP }} # IP address of your DigitalOcean droplet
+  DROPLET_USER: ${{ vars.DROPLET_USER }} # SSH user for the droplet (e.g., root)
+  SSH_PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY }} # Private key for SSH access
+  DATABASE_URL: ${{ secrets.DATABASE_URL }} # Database URL from secrets
+  STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }} # Stripe secret key from secrets
+
 jobs:
-  check-secrets:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    environment: ESTIMATE_ENV_VARIABLES # Specify the environment where secrets are stored
 
     steps:
-      - name: Check if secret is set
-        env:
-          MY_SECRET_1: ${{ secrets.DATABASE_URL }} # Access secret from the environment
-          MY_SECRET_2: ${{ secrets.STRIPE_SECRET_KEY }} # Access secret from the environment
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
         run: |
-          echo "DATABASE_URL: $MY_SECRET_1" | sed 's/./& /g'
-          echo "STRIPE_SECRET_KEY: $MY_SECRET_2" | sed 's/./& /g'
+          docker build \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
+            -t my-app:latest .
+
+      - name: Save Docker image as tar archive
+        run: docker save -o my-app.tar my-app:latest
+
+      - name: Copy Docker image to DigitalOcean droplet
+        run: |
+          scp -o StrictHostKeyChecking=no -i ${{ env.SSH_PRIVATE_KEY }} my-app.tar ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}:/root/my-app.tar
+
+      - name: SSH into DigitalOcean droplet and deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ env.SSH_PRIVATE_KEY }} ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << 'EOF'
+          docker load -i /root/my-app.tar
+          docker stop my-app || true
+          docker rm my-app || true
+          docker run -d \
+            --name my-app \
+            --env DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --env STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
+            -p 3000:3000 \
+            my-app:latest
+          EOF
