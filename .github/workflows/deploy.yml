@@ -13,7 +13,7 @@ jobs:
           if [ -z "$DATABASE_URL" ]; then
             echo "DATABASE_URL is not set or is empty"
           else
-            echo "DATABASE_URL is set (value is hidden for security)"
+            echo "DATABASE_URL is set (value is hidden for security) $DATABASE_URL"
           fi
         env:
           MY_SECRET: ${{ secrets.DATABASE_URL }} # Replace with your secret name
