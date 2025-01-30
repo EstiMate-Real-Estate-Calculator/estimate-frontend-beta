@@ -10,8 +10,8 @@ jobs:
     steps:
       - name: Check if secret is set
         run: |
-         echo "Secret names in this repository:"
-          echo "${{ toJson(secrets) }}" | jq 'keys[]'
+        echo "${{ secrets.DATABASE_URL }}"
+        echo  "${{ env.DATABASE_URL }}"
         env:
           MY_SECRET_1: ${{ secrets.DATABASE_URL }} # Replace with your secret name
           MY_SECRET_2: ${{secrets.STRIPE_SECRET_KEY}}
