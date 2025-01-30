@@ -6,12 +6,13 @@ on:
 jobs:
   check-secrets:
     runs-on: ubuntu-latest
+    environment: ESTIMATE_ENV_VARIABLES # Specify the environment where secrets are stored
 
     steps:
       - name: Check if secret is set
         env:
-          MY_SECRET_1: ${{ secrets.DATABASE_URL }} # Replace with your secret name
-          MY_SECRET_2: ${{ env.DATABASE_URL }}
+          MY_SECRET_1: ${{ secrets.DATABASE_URL }} # Access secret from the environment
+          MY_SECRET_2: ${{ secrets.STRIPE_SECRET_KEY }} # Access secret from the environment
         run: |
           echo "DATABASE_URL: $MY_SECRET_1"
           echo "STRIPE_SECRET_KEY: $MY_SECRET_2"
