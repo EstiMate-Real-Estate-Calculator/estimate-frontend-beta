@@ -11,7 +11,7 @@ jobs:
       - name: Check if secret is set
         env:
           MY_SECRET_1: ${{ secrets.DATABASE_URL }} # Replace with your secret name
-          MY_SECRET_2: ${{ secrets.STRIPE_SECRET_KEY }}
+          MY_SECRET_2: ${{ env.DATABASE_URL }}
         run: |
           echo "DATABASE_URL: $MY_SECRET_1"
           echo "STRIPE_SECRET_KEY: $MY_SECRET_2"
