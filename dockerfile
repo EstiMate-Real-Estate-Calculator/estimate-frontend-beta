@@ -11,20 +11,30 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the Next.js app (or your static site)
+# Add build arguments for environment variables
+ARG DATABASE_URL
+ARG STRIPE_SECRET_KEY
+
+# Set environment variables for build
+ENV DATABASE_URL=$DATABASE_URL
+ENV STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+
+# Build the Next.js app
 RUN npm run build
 
-# Use the official Nginx image to serve the site
-FROM nginx:alpine
+# Production image
+FROM node:18-alpine
 
-# Copy the built website files from the builder stage
-COPY --from=builder /app/out /usr/share/nginx/html
+WORKDIR /app
 
-# Copy custom Nginx configuration (if needed)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy necessary files from builder
+COPY --from=builder /app/package.json /app/package-lock.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
 
-# Expose port 80 (default HTTP port for Nginx)
-EXPOSE 80
+# Expose the port your app runs on
+EXPOSE 3000
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["npm", "start"]
