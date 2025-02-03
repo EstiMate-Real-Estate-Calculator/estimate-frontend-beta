@@ -1,5 +1,5 @@
 # Use the official Node.js image from a different registry (e.g., GitHub Container Registry)
-FROM ghcr.io/node:18-alpine as builder
+FROM node:18-alpine as builder
 
 # Set the working directory inside the container
 WORKDIR /app
