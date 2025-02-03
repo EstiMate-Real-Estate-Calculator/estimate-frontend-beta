@@ -23,7 +23,7 @@ ENV STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
 RUN npm run build
 
 # Production image
-FROM ghcr.io/node:18-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
