@@ -1,5 +1,5 @@
-# Use the official Node.js image
-FROM node:18-alpine as builder
+# Use the official Node.js image from a different registry (e.g., GitHub Container Registry)
+FROM ghcr.io/node:18-alpine as builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -23,7 +23,7 @@ ENV STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
 RUN npm run build
 
 # Production image
-FROM node:18-alpine
+FROM ghcr.io/node:18-alpine
 
 WORKDIR /app
 
