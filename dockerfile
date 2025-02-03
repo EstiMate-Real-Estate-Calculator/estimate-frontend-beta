@@ -1,5 +1,8 @@
-# Use the official Node.js image from a different registry (e.g., GitHub Container Registry)
+# Use the official Node.js image
 FROM node:18-alpine as builder
+
+# Install OpenSSL
+RUN apk add --no-cache openssl
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -24,6 +27,9 @@ RUN npm run build
 
 # Production image
 FROM node:18-alpine
+
+# Install OpenSSL in the production image
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 

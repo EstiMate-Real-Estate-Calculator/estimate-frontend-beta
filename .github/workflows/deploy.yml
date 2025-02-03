@@ -13,7 +13,7 @@ env:
   SSH_PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY }} # Private key for SSH access
   DATABASE_URL: ${{ secrets.DATABASE_URL }} # Database URL from secrets
   STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }} # Stripe secret key from secrets
-  DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/my-app
+  DOCKER_IMAGE: estimate-app
 
 jobs:
   build-and-deploy:
@@ -35,8 +35,15 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/estimate_droplet_v2_rsa
+          echo "${{ env.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+      
+      - name: Add Droplet to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ env.DROPLET_IP }} $(ssh-keyscan -H ${{ env.DROPLET_IP }} 2>/dev/null)" >> ~/.ssh/known_hosts
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
