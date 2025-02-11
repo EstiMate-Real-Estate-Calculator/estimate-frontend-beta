@@ -41,11 +41,16 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -T ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}
 
-      - name: Ensure App Directory Exists on Droplet
+      - name: Remove Old Project Files and Set Up Directory
         run: |
-          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c 'sudo mkdir -p /var/www/estimate-app && sudo chown -R ${{ env.DROPLET_USER }}:www-data /var/www/estimate-app && sudo chmod -R 755 /var/www/estimate-app'"
+          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
+          echo \"Removing old project files...\"
+          sudo rm -rf /var/www/estimate-app
+          sudo mkdir -p /var/www/estimate-app
+          sudo chown -R ${{ env.DROPLET_USER }}:www-data /var/www/estimate-app
+          sudo chmod -R 755 /var/www/estimate-app'"
 
-      - name: Copy project files to DigitalOcean Droplet
+      - name: Copy Project Files to Droplet
         run: |
           rsync -avz --exclude '.git' --exclude 'node_modules' ./ \
           ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}:/var/www/estimate-app
