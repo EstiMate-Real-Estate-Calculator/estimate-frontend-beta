@@ -24,20 +24,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Debug SSH Key Setup
+      - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ env.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-          ls -la ~/.ssh
-          cat ~/.ssh/id_rsa | head -n 10
-
-      - name: Fix SSH Key Permissions
-        run: |
-          chmod 700 ~/.ssh
-          chmod 600 ~/.ssh/id_rsa
 
       - name: Add Droplet to known hosts
         run: |
@@ -46,11 +39,11 @@ jobs:
 
       - name: Test SSH Connection
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << EOF
-          sudo mkdir -p /var/www/estimate-app
-          sudo chown -R ${{ env.DROPLET_USER }}:www-data /var/www/estimate-app
-          sudo chmod -R 755 /var/www/estimate-app
-          ENDSSH
+          ssh -o StrictHostKeyChecking=no -T ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}
+
+      - name: Ensure App Directory Exists on Droplet
+        run: |
+          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c 'sudo mkdir -p /var/www/estimate-app && sudo chown -R ${{ env.DROPLET_USER }}:www-data /var/www/estimate-app && sudo chmod -R 755 /var/www/estimate-app'"
 
       - name: Copy project files to DigitalOcean Droplet
         run: |
@@ -59,25 +52,13 @@ jobs:
 
       - name: SSH into Droplet and deploy Docker container
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << 'ENDSSH'
-          cd /var/www/estimate-app
-
-          echo "Building Docker image..."
-          docker build -t ${{ env.APP_NAME }} .
-
-          echo "Stopping and removing old container..."
-          docker stop ${{ env.APP_NAME }} || true
-          docker rm ${{ env.APP_NAME }} || true
-
-          echo "Starting new container..."
-          docker run -d \
-            --name ${{ env.APP_NAME }} \
-            --restart unless-stopped \
-            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            -e STRIPE_SECRET_KEY="${{ secrets.STRIPE_SECRET_KEY }}" \
-            -p 3000:3000 \
-            ${{ env.APP_NAME }}
-
-          echo "Cleaning up old images..."
-          docker image prune -f
-          ENDSSH
+          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c 'cd /var/www/estimate-app && \
+          echo \"Building Docker image...\" && \
+          docker build -t ${{ env.APP_NAME }} . && \
+          echo \"Stopping and removing old container...\" && \
+          docker stop ${{ env.APP_NAME }} || true && \
+          docker rm ${{ env.APP_NAME }} || true && \
+          echo \"Starting new container...\" && \
+          docker run -d --name ${{ env.APP_NAME }} --restart unless-stopped -e DATABASE_URL=\"${{ secrets.DATABASE_URL }}\" -e STRIPE_SECRET_KEY=\"${{ secrets.STRIPE_SECRET_KEY }}\" -p 3000:3000 ${{ env.APP_NAME }} && \
+          echo \"Cleaning up old images...\" && \
+          docker image prune -f'"
