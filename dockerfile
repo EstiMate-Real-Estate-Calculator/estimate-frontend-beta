@@ -7,25 +7,14 @@ RUN apk add --no-cache openssl
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files and install all dependencies
 COPY package.json package-lock.json ./
 
-# Reduce memory usage to prevent build crashes
-ENV NODE_OPTIONS="--max-old-space-size=512"
-
-# Use --omit=dev to avoid unnecessary dependencies in production
-RUN npm install --omit=dev
+# Ensure all dependencies are installed
+RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 # Copy the rest of the application code
 COPY . .
-
-# Add build arguments for environment variables
-ARG DATABASE_URL
-ARG STRIPE_SECRET_KEY
-
-# Set environment variables for build
-ENV DATABASE_URL=$DATABASE_URL
-ENV STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
 
 # Build the Next.js app
 RUN npm run build
