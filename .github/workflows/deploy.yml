@@ -41,6 +41,20 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -T ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}
 
+      - name: Increase Swap Memory to Prevent Out-of-Memory Kills
+        run: |
+          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
+          if ! swapon --show | grep -q swapfile; then
+            echo \"Adding swap space...\"
+            sudo fallocate -l 2G /swapfile
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+            echo \"/swapfile none swap sw 0 0\" | sudo tee -a /etc/fstab
+          else
+            echo \"Swap space already exists.\"
+          fi'"
+
       - name: Remove Old Project Files and Set Up Directory
         run: |
           ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
