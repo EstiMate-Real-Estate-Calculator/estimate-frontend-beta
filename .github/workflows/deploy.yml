@@ -73,9 +73,12 @@ jobs:
           # Change to the project directory
           cd /var/www/estimate-app
 
-          # Build and run the Docker container
+          # Build and tag the Docker image
           echo \"Building Docker image...\"
           docker build -t ${{ env.APP_NAME }} .
+
+          # Ensure the image is tagged correctly for the run command
+          docker tag ${{ env.APP_NAME }} ${{ env.DROPLET_USER }}/${{ env.APP_NAME }}
 
           echo \"Stopping and removing old container...\"
           docker stop ${{ env.APP_NAME }} || true

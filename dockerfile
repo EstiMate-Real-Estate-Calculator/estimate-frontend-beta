@@ -5,11 +5,16 @@ FROM node:18-alpine as builder
 RUN apk add --no-cache openssl
 
 # Set working directory inside the container
-WORKDIR /var/www/estimate-app
+WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
+
+# Reduce memory usage to prevent build crashes
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
+# Use --omit=dev to avoid unnecessary dependencies in production
+RUN npm install --omit=dev
 
 # Copy the rest of the application code
 COPY . .
@@ -32,13 +37,13 @@ FROM node:18-alpine
 RUN apk add --no-cache openssl
 
 # Set working directory inside the container
-WORKDIR /var/www/estimate-app
+WORKDIR /app
 
 # Copy necessary files from builder
-COPY --from=builder /var/www/estimate-app/package.json /var/www/estimate-app/package-lock.json ./
-COPY --from=builder /var/www/estimate-app/.next ./.next
-COPY --from=builder /var/www/estimate-app/public ./public
-COPY --from=builder /var/www/estimate-app/node_modules ./node_modules
+COPY --from=builder /app/package.json /app/package-lock.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
 
 # Expose the port the app runs on
 EXPOSE 3000
