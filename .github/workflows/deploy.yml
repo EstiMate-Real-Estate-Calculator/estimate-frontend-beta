@@ -19,48 +19,55 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ESTIMATE_ENV_VARIABLES  
-    
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Print SSH key for debugging
+      - name: Debug SSH Key Setup
         run: |
-          echo "SSH Private Key:"
-          echo "${{ env.SSH_PRIVATE_KEY }}"
-
-      - name: Setup SSH key
-        run: |
-          echo "${{ vars.DROPLET_IP }}"
           mkdir -p ~/.ssh
           echo "${{ env.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
+          ls -la ~/.ssh
+          cat ~/.ssh/id_rsa | head -n 10
+
+      - name: Fix SSH Key Permissions
+        run: |
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Add Droplet to known hosts
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ env.DROPLET_IP }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ env.DROPLET_IP }} > ~/.ssh/known_hosts
+          cat ~/.ssh/known_hosts
+
+      - name: Test SSH Connection
+        run: |
+          ssh -o StrictHostKeyChecking=no -T ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}
 
       - name: Copy project files to DigitalOcean Droplet
         run: |
-          rsync -avz --exclude '.git' --exclude 'node_modules' ./ ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}:/home/${{ env.DROPLET_USER }}/app
+          rsync -avz --exclude '.git' --exclude 'node_modules' ./ \
+          ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}:/home/${{ env.DROPLET_USER }}/app
 
-      - name: SSH into Droplet and build/deploy Docker container
+      - name: SSH into Droplet and deploy Docker container
         run: |
-          ssh ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << 'ENDSSH'
+          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << 'ENDSSH'
+          set -e  # Exit immediately on error
+
           cd /home/${{ env.DROPLET_USER }}/app
 
-          # Build the Docker image locally
+          echo "Building Docker image..."
           docker build -t ${{ env.APP_NAME }} .
 
-          # Stop and remove the old container if running
+          echo "Stopping and removing old container..."
           docker stop ${{ env.APP_NAME }} || true
           docker rm ${{ env.APP_NAME }} || true
 
-          # Run the new container
+          echo "Starting new container..."
           docker run -d \
             --name ${{ env.APP_NAME }} \
             --restart unless-stopped \
@@ -69,6 +76,6 @@ jobs:
             -p 3000:3000 \
             ${{ env.APP_NAME }}
 
-          # Clean up old images
+          echo "Cleaning up old images..."
           docker image prune -f
           ENDSSH
