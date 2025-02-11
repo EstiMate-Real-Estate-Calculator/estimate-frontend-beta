@@ -1,61 +1,62 @@
-# Use the official Node.js image
+# 1) Build Stage
 FROM node:18-alpine as builder
 
-# Install OpenSSL and other build dependencies
+# Install any OS dependencies you need (e.g., OpenSSL)
 RUN apk add --no-cache openssl
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /var/www/estimate-app
 
-# First, copy only package files to leverage Docker cache
+# Copy only package files first for better Docker caching
 COPY package.json package-lock.json ./
 
-# Install dependencies with specific flags to reduce warnings and issues
-RUN npm install --production --frozen-lockfile --silent \
-    && npm cache clean --force
+# ------------
+# NOTE: We do a full npm install (including devDependencies)
+# to ensure packages like Tailwind, postcss-nesting, etc. are present
+# for the build process.
+# ------------
+RUN npm install --legacy-peer-deps --silent
 
-# Install Tailwind CSS and its dependencies explicitly
-RUN npm install -D tailwindcss@latest postcss@latest autoprefixer@latest @tailwindcss/postcss postcss-nesting@latest
-
-# Copy the rest of the application code
+# Copy the entire project
 COPY . .
 
-# Add build arguments for environment variables
+# Build environment variables
 ARG DATABASE_URL
 ARG STRIPE_SECRET_KEY
-
-# Set environment variables for build
 ENV DATABASE_URL=$DATABASE_URL
 ENV STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
 ENV NODE_ENV=production
 
 # Build the Next.js app
-RUN npm run build \
-    && npm prune --production
+# This uses devDependencies at build-time (e.g., Tailwind, postcss-nesting)
+RUN npm run build
 
-# Production image
+# ------------
+# Prune devDependencies to minimize the final image size
+# ------------
+RUN npm prune --production
+
+# 2) Production Image
 FROM node:18-alpine
 
-# Install OpenSSL in the production image
+# Install any OS dependencies needed at runtime
 RUN apk add --no-cache openssl
 
+# Set working directory
 WORKDIR /var/www/estimate-app
 
-# Copy only the necessary files from builder
+# Copy only the necessary build outputs and production dependencies
 COPY --from=builder /var/www/estimate-app/package.json /var/www/estimate-app/package-lock.json ./
 COPY --from=builder /var/www/estimate-app/.next ./.next
 COPY --from=builder /var/www/estimate-app/public ./public
 COPY --from=builder /var/www/estimate-app/node_modules ./node_modules
 
-# Set production environment
-ENV NODE_ENV=production
-
 # Expose the port your app runs on
 EXPOSE 3000
 
-# Health check
+# Optional Healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
 
-# Start the application
+# Default command
 CMD ["npm", "start"]
