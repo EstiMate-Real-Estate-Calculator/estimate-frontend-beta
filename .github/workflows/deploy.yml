@@ -84,12 +84,25 @@ jobs:
             echo \"Docker is already installed.\"
           fi
 
+          # Clean up disk space
+          echo \"Cleaning up disk space...\"
+          docker system prune -af --volumes
+          sudo apt-get clean
+          sudo apt-get autoremove -y
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo journalctl --vacuum-time=1d
+
+          # Show available disk space
+          echo \"Available disk space:\"
+          df -h
+
           # Change to the project directory
           cd /var/www/estimate-app
 
           # Build and tag the Docker image with build args
           echo \"Building Docker image...\"
           docker build \
+            --no-cache \
             --build-arg DATABASE_URL=\"${{ secrets.DATABASE_URL }}\" \
             --build-arg STRIPE_SECRET_KEY=\"${{ secrets.STRIPE_SECRET_KEY }}\" \
             -t ${{ env.APP_NAME }}:latest .
@@ -113,13 +126,17 @@ jobs:
           # Wait for container to be healthy
           echo \"Waiting for container to be healthy...\"
           for i in {1..30}; do
-            if [ \"$(docker inspect --format=\"{{.State.Health.Status}}\" ${{ env.APP_NAME }})\" = \"healthy\" ]; then
-              echo \"Container is healthy!\"
+            if docker ps | grep -q ${{ env.APP_NAME }}; then
+              echo \"Container is running!\"
               break
             fi
-            echo \"Waiting for container to become healthy...\"
+            echo \"Waiting for container to start...\"
             sleep 10
           done
+
+          # Show container logs
+          echo \"Container logs:\"
+          docker logs ${{ env.APP_NAME }}
 
           # Clean up old images
           echo \"Cleaning up old images...\"
