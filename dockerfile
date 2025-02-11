@@ -15,7 +15,9 @@ RUN npm install --production --frozen-lockfile --silent \
     && npm cache clean --force
 
 # Install Tailwind CSS and its dependencies explicitly
-RUN npm install -D tailwindcss@latest postcss@latest autoprefixer@latest @tailwindcss/postcss
+RUN npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+# Install missing Tailwind PostCSS plugin
+RUN npm install @tailwindcss/postcss --save
 
 # Copy the rest of the application code
 COPY . .
