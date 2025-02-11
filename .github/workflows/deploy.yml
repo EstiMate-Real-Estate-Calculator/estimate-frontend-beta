@@ -47,6 +47,10 @@ jobs:
       - name: Test SSH Connection
         run: |
           ssh -o StrictHostKeyChecking=no -T ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}
+          sudo mkdir -p /var/www/estimate-app
+          sudo chown -R ${{ env.DROPLET_USER }}:www-data /var/www/estimate-app
+          sudo chmod -R 755 /var/www/estimate-app
+          ENDSSH
 
       - name: Copy project files to DigitalOcean Droplet
         run: |
