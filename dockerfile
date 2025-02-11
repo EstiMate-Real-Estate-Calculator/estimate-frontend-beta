@@ -1,15 +1,15 @@
 # Use the official Node.js image
 FROM node:18-alpine as builder
 
-# Install OpenSSL
+# Install dependencies
 RUN apk add --no-cache openssl
 
-# Set the working directory inside the container
-WORKDIR /app
+# Set working directory inside the container
+WORKDIR /var/www/estimate-app
 
 # Copy package files and install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
@@ -31,16 +31,17 @@ FROM node:18-alpine
 # Install OpenSSL in the production image
 RUN apk add --no-cache openssl
 
-WORKDIR /app
+# Set working directory inside the container
+WORKDIR /var/www/estimate-app
 
 # Copy necessary files from builder
-COPY --from=builder /app/package.json /app/package-lock.json ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /var/www/estimate-app/package.json /var/www/estimate-app/package-lock.json ./
+COPY --from=builder /var/www/estimate-app/.next ./.next
+COPY --from=builder /var/www/estimate-app/public ./public
+COPY --from=builder /var/www/estimate-app/node_modules ./node_modules
 
-# Expose the port your app runs on
+# Expose the port the app runs on
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]

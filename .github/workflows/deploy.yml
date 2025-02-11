@@ -51,14 +51,12 @@ jobs:
       - name: Copy project files to DigitalOcean Droplet
         run: |
           rsync -avz --exclude '.git' --exclude 'node_modules' ./ \
-          ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}:/home/${{ env.DROPLET_USER }}/app
+          ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }}:/var/www/estimate-app
 
       - name: SSH into Droplet and deploy Docker container
         run: |
           ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << 'ENDSSH'
-          set -e  # Exit immediately on error
-
-          cd /home/${{ env.DROPLET_USER }}/app
+          cd /var/www/estimate-app
 
           echo "Building Docker image..."
           docker build -t ${{ env.APP_NAME }} .
