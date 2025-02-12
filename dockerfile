@@ -10,9 +10,10 @@ WORKDIR /var/www/estimate-app
 # Copy only package files first for better Docker caching
 COPY package.json package-lock.json ./
 
-# Clean npm cache and install dependencies with better error visibility
+# Clean npm cache and install dependencies
 RUN npm cache clean --force && \
-    npm install --legacy-peer-deps || { echo "npm install failed"; exit 1; }
+    rm -rf node_modules && \
+    npm install || { echo "npm install failed"; exit 1; }
 
 # Copy the entire project
 COPY . .
