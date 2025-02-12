@@ -8,12 +8,12 @@ RUN apk add --no-cache openssl
 WORKDIR /var/www/estimate-app
 
 # Copy only package files first for better Docker caching
-COPY package.json package-lock.json ./
+COPY package.json ./
 
-# Clean npm cache and install dependencies
+# Clean install dependencies
 RUN npm cache clean --force && \
-    rm -rf node_modules && \
-    npm install || { echo "npm install failed"; exit 1; }
+    rm -rf package-lock.json node_modules && \
+    npm install --no-package-lock || { echo "npm install failed"; exit 1; }
 
 # Copy the entire project
 COPY . .
@@ -41,7 +41,7 @@ RUN apk add --no-cache openssl
 WORKDIR /var/www/estimate-app
 
 # Copy only the necessary build outputs and production dependencies
-COPY --from=builder /var/www/estimate-app/package.json /var/www/estimate-app/package-lock.json ./
+COPY --from=builder /var/www/estimate-app/package.json ./
 COPY --from=builder /var/www/estimate-app/.next ./.next
 COPY --from=builder /var/www/estimate-app/public ./public
 COPY --from=builder /var/www/estimate-app/node_modules ./node_modules
