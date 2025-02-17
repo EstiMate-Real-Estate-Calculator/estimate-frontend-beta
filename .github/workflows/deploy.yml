@@ -18,7 +18,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ESTIMATE_ENV_VARIABLES  
+    environment: ESTIMATE_ENV_VARIABLES
 
     steps:
       - name: Checkout repository
@@ -29,7 +29,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ env.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
+          eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
 
       - name: Add Droplet to known hosts
@@ -79,7 +79,7 @@ jobs:
             sudo apt install -y docker.io
             sudo systemctl enable docker
             sudo systemctl start docker
-            sudo usermod -aG docker $USER
+            sudo usermod -aG docker \$USER
           else
             echo \"Docker is already installed.\"
           fi
@@ -143,31 +143,17 @@ jobs:
           docker image prune -f'
           "
 
-          - name: Configure Nginx Reverse Proxy
-          run: |
-            ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
-              echo \"Installing and configuring Nginx for esti-mate.com...\"
-              sudo apt update && sudo apt install -y nginx
-        
-              echo \"Creating Nginx configuration file...\"
-              sudo bash -c \"echo 'server {
-                listen 80;
-                server_name esti-mate.com www.esti-mate.com;
-                location / {
-                    proxy_pass http://localhost:3000;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade \$http_upgrade;
-                    proxy_set_header Connection \\\"upgrade\\\";
-                    proxy_set_header Host \$host;
-                    proxy_cache_bypass \$http_upgrade;
-                }
-              }' > /etc/nginx/sites-available/esti-mate.com\"
-        
-              echo \"Linking configuration...\"
-              sudo ln -sf /etc/nginx/sites-available/esti-mate.com /etc/nginx/sites-enabled/esti-mate.com
-        
-              echo \"Testing Nginx configuration...\"
-              sudo nginx -t && sudo systemctl reload nginx
-        
-              echo \"Nginx configured successfully.\"
-            '"
+      - name: Configure Nginx Reverse Proxy
+        run: |
+          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
+          set -e
+          echo \"Installing and configuring Nginx for esti-mate.com...\"
+          sudo apt update && sudo apt install -y nginx
+          echo \"Creating Nginx configuration file...\"
+          sudo bash -c \"echo 'server {\n    listen 80;\n    server_name esti-mate.com www.esti-mate.com;\n    location / {\n        proxy_pass http://localhost:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade \$http_upgrade;\n        proxy_set_header Connection \\\"upgrade\\\";\n        proxy_set_header Host \$host;\n        proxy_cache_bypass \$http_upgrade;\n    }\n}' > /etc/nginx/sites-available/esti-mate.com\"
+          echo \"Linking configuration...\"
+          sudo ln -sf /etc/nginx/sites-available/esti-mate.com /etc/nginx/sites-enabled/esti-mate.com
+          echo \"Testing Nginx configuration...\"
+          sudo nginx -t && sudo systemctl reload nginx
+          echo \"Nginx configured successfully.\"
+          '"
