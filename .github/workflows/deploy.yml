@@ -150,7 +150,20 @@ jobs:
           echo \"Installing and configuring Nginx for esti-matecalculator.com...\"
           sudo apt update && sudo apt install -y nginx
           echo \"Creating Nginx configuration file...\"
-          sudo bash -c \"echo 'server {\n    listen 80;\n    server_name esti-matecalculator.com www.esti-matecalculator.com;\n    location / {\n        proxy_pass http://localhost:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade \$http_upgrade;\n        proxy_set_header Connection \\\"upgrade\\\";\n        proxy_set_header Host \$host;\n        proxy_cache_bypass \$http_upgrade;\n    }\n}' > /etc/nginx/sites-available/esti-mate.com\"
+          sudo bash -c \"cat > /etc/nginx/sites-available/esti-mate.com << 'EOF'
+          server {
+              listen 80;
+              server_name esti-matecalculator.com www.esti-matecalculator.com;
+              location / {
+                  proxy_pass http://localhost:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection \"upgrade\";
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
+              }
+          }
+          EOF\"
           echo \"Linking configuration...\"
           sudo ln -sf /etc/nginx/sites-available/esti-mate.com /etc/nginx/sites-enabled/esti-matecalculator.com
           echo \"Testing Nginx configuration...\"
