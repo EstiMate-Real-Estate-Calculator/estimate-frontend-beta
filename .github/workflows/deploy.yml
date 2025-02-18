@@ -150,7 +150,7 @@ jobs:
           echo \"Installing and configuring Nginx for esti-matecalculator.com...\"
           sudo apt update && sudo apt install -y nginx
           echo \"Creating Nginx configuration file...\"
-          sudo bash -c \"cat > /etc/nginx/sites-available/esti-mate.com << 'EOF'
+          sudo bash -c \"cat > /etc/nginx/sites-available/esti-matecalculator.com << 'EOF'
           server {
               listen 80;
               server_name esti-matecalculator.com www.esti-matecalculator.com;
@@ -158,7 +158,7 @@ jobs:
                   proxy_pass http://localhost:3000;
                   proxy_http_version 1.1;
                   proxy_set_header Upgrade \$http_upgrade;
-                  proxy_set_header Connection \"upgrade\";
+                  proxy_set_header Connection 'upgrade';
                   proxy_set_header Host \$host;
                   proxy_cache_bypass \$http_upgrade;
               }
@@ -175,4 +175,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo lsof -i :80"
           ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo systemctl status nginx.service"
           ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo journalctl -xeu nginx.service"
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c 'sudo systemctl reload nginx'"
+          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo nginx -t"
+          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo systemctl reload nginx"
