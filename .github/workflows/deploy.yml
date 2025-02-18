@@ -172,4 +172,7 @@ jobs:
           '"
       - name: Reload Nginx
         run: |
+          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo lsof -i :80"
+          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo systemctl status nginx.service"
+          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo journalctl -xeu nginx.service"
           ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c 'sudo systemctl reload nginx'"
