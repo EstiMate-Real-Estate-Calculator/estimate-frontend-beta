@@ -170,3 +170,6 @@ jobs:
           sudo nginx -t && sudo systemctl reload nginx
           echo \"Nginx configured successfully.\"
           '"
+      - name: Reload Nginx
+        run: |
+          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo systemctl reload nginx"

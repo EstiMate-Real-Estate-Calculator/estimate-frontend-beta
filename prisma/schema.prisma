@@ -138,6 +138,11 @@ model UserTokens {
   time_to_live Int
 }
 
+model Tutorials {
+   id Int @id @unique @default(sequence())
+   name String
+}
+
 model Users {
   id Int @id @unique @default(sequence())
   username String @unique
@@ -146,5 +151,6 @@ model Users {
   uniqueToken String 
   password String
   creation_date DateTime @default(now())
+  tutorials Json?
 
 }
