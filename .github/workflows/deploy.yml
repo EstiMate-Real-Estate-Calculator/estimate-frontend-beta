@@ -143,37 +143,30 @@ jobs:
           docker image prune -f'
           "
 
-      - name: Configure Nginx Reverse Proxy
-        run: |
-          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
-          set -e
-          echo \"Installing and configuring Nginx for esti-matecalculator.com...\"
-          sudo apt update && sudo apt install -y nginx
-          echo \"Creating Nginx configuration file...\"
-          sudo bash -c \"cat > /etc/nginx/sites-available/esti-matecalculator.com << 'EOF'
-          server {
-              listen 80;
-              server_name esti-matecalculator.com www.esti-matecalculator.com;
-              location / {
-                  proxy_pass http://localhost:3000;
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection upgrade;
-                  proxy_set_header Host $host;
-                  proxy_cache_bypass $http_upgrade;
-              }
-          }
-          EOF\"
-          echo \"Linking configuration...\"
-          sudo ln -sf /etc/nginx/sites-available/esti-mate.com /etc/nginx/sites-enabled/esti-matecalculator.com
-          echo \"Testing Nginx configuration...\"
-          sudo nginx -t && sudo systemctl reload nginx
-          echo \"Nginx configured successfully.\"
-          '"
-      - name: Reload Nginx
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo lsof -i :80"
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo systemctl status nginx.service"
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo journalctl -xeu nginx.service"
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo nginx -t"
-          ssh -o StrictHostKeyChecking=no ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "sudo systemctl reload nginx"
+          - name: Configure Nginx Reverse Proxy
+          run: |
+            ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} "bash -c '
+            set -e
+            echo \"Installing and configuring Nginx for esti-matecalculator.com...\"
+            sudo apt update && sudo apt install -y nginx
+            echo \"Creating Nginx configuration file...\"
+            sudo tee /etc/nginx/sites-available/esti-matecalculator.com > /dev/null <<'EOF'
+            server {
+                listen 80;
+                server_name esti-matecalculator.com www.esti-matecalculator.com;
+                location / {
+                    proxy_pass http://localhost:3000;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection upgrade;
+                    proxy_set_header Host $host;
+                    proxy_cache_bypass $http_upgrade;
+                }
+            }
+            EOF
+                echo \"Linking configuration...\"
+                sudo ln -sf /etc/nginx/sites-available/esti-matecalculator.com /etc/nginx/sites-enabled/esti-matecalculator.com
+                echo \"Testing Nginx configuration...\"
+                sudo nginx -t && sudo systemctl reload nginx
+                echo \"Nginx configured successfully.\"
+                '"
