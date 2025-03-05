@@ -110,7 +110,7 @@ jobs:
           docker stop ${{ env.APP_NAME }} || true
           docker rm ${{ env.APP_NAME }} || true
 
-          # Start the new container with proper environment variables
+          # Start the new container with proper environment variables and Papertrail logging options
           echo \"Starting new container...\"
           docker run -d \
             --name ${{ env.APP_NAME }} \
@@ -119,6 +119,9 @@ jobs:
             -e STRIPE_SECRET_KEY=\"${{ secrets.STRIPE_SECRET_KEY }}\" \
             -e NODE_ENV=production \
             -p 3000:3000 \
+            --log-driver=syslog \
+            --log-opt syslog-address=tcp://logs2.papertrailapp.com:15816 \
+            --log-opt tag=\"${{ env.APP_NAME }}\" \
             ${{ env.APP_NAME }}:latest
 
           # Wait for container to be healthy
@@ -154,10 +157,10 @@ jobs:
               location / {
                   proxy_pass http://localhost:3000;
                   proxy_http_version 1.1;
-                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Upgrade \$http_upgrade;
                   proxy_set_header Connection upgrade;
-                  proxy_set_header Host $host;
-                  proxy_cache_bypass $http_upgrade;
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
               }
           }
           NGINXEOF
