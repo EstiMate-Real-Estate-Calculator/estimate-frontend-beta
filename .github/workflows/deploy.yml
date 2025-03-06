@@ -119,9 +119,6 @@ jobs:
             -e STRIPE_SECRET_KEY=\"${{ secrets.STRIPE_SECRET_KEY }}\" \
             -e NODE_ENV=production \
             -p 3000:3000 \
-            --log-driver=syslog \
-            --log-opt syslog-address=tcp://logs2.papertrailapp.com:15816 \
-            --log-opt tag=\"${{ env.APP_NAME }}\" \
             ${{ env.APP_NAME }}:latest
 
           # Wait for container to be healthy
