@@ -1,20 +1,41 @@
 import UserHandler from '@lib/auth/userHandler';
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+// Define allowed origins. Update this list as needed.
+const allowedOrigins = [
+  "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
+  "http://esti-matecalculator.com",
+  "https://www.esti-matecalculator.com"
+];
 
-export async function OPTIONS() {
-  // Respond to preflight requests with CORS headers
+function getCorsHeaders(request) {
+  const origin = request.headers.get("origin");
+  const headers = {
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+  if (allowedOrigins.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  } else {
+    headers["Access-Control-Allow-Origin"] = "null";
+  }
+  return headers;
+}
+
+export async function OPTIONS(request) {
+  const headers = getCorsHeaders(request);
+  // Respond to preflight requests with dynamic CORS headers
   return new Response(null, {
     status: 200,
-    headers: corsHeaders,
+    headers,
   });
 }
 
 export async function POST(request) {
+  const headers = {
+    ...getCorsHeaders(request),
+    "Content-Type": "application/json"
+  };
+
   try {
     const { username, email, password } = await request.json();
 
@@ -27,7 +48,7 @@ export async function POST(request) {
         JSON.stringify({ error: 'User already exists' }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers,
         }
       );
     }
@@ -36,7 +57,7 @@ export async function POST(request) {
 
     return new Response(JSON.stringify(newUser), {
       status: 201,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers,
     });
   } catch (error) {
     return new Response(
@@ -46,7 +67,7 @@ export async function POST(request) {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers,
       }
     );
   }

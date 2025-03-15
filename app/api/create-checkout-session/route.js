@@ -4,21 +4,39 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+// Define allowed origins. Modify as needed.
+const allowedOrigins = [
+  "http://esti-matecalculator.com",
+  "https://www.esti-matecalculator.com",
+  "chrome-extension://jlbajdeadaajjafapaochogphndfeicb"
+];
 
-export async function OPTIONS() {
-  // Handle preflight requests with the CORS headers
+function getCorsHeaders(request) {
+  const origin = request.headers.get("origin");
+  const headers = {
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+
+  if (allowedOrigins.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  } else {
+    headers["Access-Control-Allow-Origin"] = "null";
+  }
+  return headers;
+}
+
+export async function OPTIONS(request) {
+  const headers = getCorsHeaders(request);
+  // Handle preflight requests with the dynamic CORS headers
   return new NextResponse(null, {
     status: 200,
-    headers: corsHeaders,
+    headers,
   });
 }
 
 export async function POST(req) {
+  const headers = getCorsHeaders(req);
   const { email, skipTrial } = await req.json(); // Assuming you collect the user's email and trial preference
 
   try {
@@ -42,8 +60,11 @@ export async function POST(req) {
       },
     });
 
-    return NextResponse.json({ id: session.id }, { headers: corsHeaders });
+    return NextResponse.json({ id: session.id }, { headers });
   } catch (error) {
-    return NextResponse.json({ message: error.message }, { status: 500, headers: corsHeaders });
+    return NextResponse.json(
+      { message: error.message },
+      { status: 500, headers }
+    );
   }
 }

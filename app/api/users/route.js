@@ -2,27 +2,47 @@ import {
   appendTutorialToAllUsers,
   appendTutorialToUser,
   removeTutorialFromUser,
-  // Assuming removeTutorialFromAllUsers is available – if not, you'll need to import it as well.
   removeTutorialFromAllUsers,
   tutorialExistsForUser, 
   getTutorialsByUserId,
 } from "@lib/userTutorial"; // adjust the import path accordingly
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+// Define allowed origins. Update this list as needed.
+const allowedOrigins = [
+  "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
+  "http://esti-matecalculator.com",
+  "https://www.esti-matecalculator.com"
+];
 
-export async function OPTIONS() {
-  // Respond to preflight requests with the CORS headers
+function getCorsHeaders(request) {
+  const origin = request.headers.get("origin");
+  const headers = {
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+  if (allowedOrigins.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  } else {
+    headers["Access-Control-Allow-Origin"] = "null";
+  }
+  return headers;
+}
+
+export async function OPTIONS(request) {
+  const headers = getCorsHeaders(request);
+  // Respond to preflight requests with dynamic CORS headers
   return new Response(null, {
     status: 200,
-    headers: corsHeaders,
+    headers,
   });
 }
 
 export async function POST(req) {
+  const headers = {
+    ...getCorsHeaders(req),
+    "Content-Type": "application/json",
+  };
+
   try {
     const body = await req.json();
     const { tutorialNumber, action, userId } = body;
@@ -36,7 +56,7 @@ export async function POST(req) {
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers,
         }
       );
     }
@@ -53,7 +73,7 @@ export async function POST(req) {
             }),
             {
               status: 400,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
+              headers,
             }
           );
         }
@@ -66,7 +86,7 @@ export async function POST(req) {
           }),
           {
             status: 200,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers,
           }
         );
       } else {
@@ -79,7 +99,7 @@ export async function POST(req) {
           }),
           {
             status: 200,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers,
           }
         );
       }
@@ -94,7 +114,7 @@ export async function POST(req) {
           }),
           {
             status: 200,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers,
           }
         );
       } else {
@@ -107,7 +127,7 @@ export async function POST(req) {
           }),
           {
             status: 200,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers,
           }
         );
       }
@@ -119,7 +139,7 @@ export async function POST(req) {
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers,
         }
       );
     }
@@ -133,13 +153,18 @@ export async function POST(req) {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers,
       }
     );
   }
 }
 
 export async function GET(req) {
+  const headers = {
+    ...getCorsHeaders(req),
+    "Content-Type": "application/json",
+  };
+
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
@@ -152,7 +177,7 @@ export async function GET(req) {
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers,
         }
       );
     }
@@ -165,7 +190,7 @@ export async function GET(req) {
       }),
       {
         status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers,
       }
     );
   } catch (error) {
@@ -178,7 +203,7 @@ export async function GET(req) {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers,
       }
     );
   }
