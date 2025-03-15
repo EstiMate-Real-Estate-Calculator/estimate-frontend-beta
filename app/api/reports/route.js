@@ -9,17 +9,22 @@ export async function POST(request) {
     const data = await request.json();
 
     if (data) {
-      const { reportData, username } = data;
+      const { reportData, username, reportType} = data;
 
       const user = await UserHandler.getUserByUsername(username);
 
+      if (reportType == "rental"){
       // Create a new report
-      const newReport = await ReportsHandler.createReport({
-        ...reportData,
-        userId: user.id,
-      });
+        const newReport = await ReportsHandler.createReport({
+          ...reportData,
+          userId: user.id,
+        });
 
-      return NextResponse.json(newReport, { status: 201 });
+        return NextResponse.json(newReport, { status: 201 });
+      }
+      else{
+        return  NextResponse.json({error: 'Invalid Report Type', status: 401})
+      }
     } else {
       // Return unauthorized response
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

@@ -1,9 +1,3 @@
-// This is your Prisma schema file 
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries  or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,137 +8,142 @@ datasource db {
 }
 
 model Reports {
-  reportId  Int @id @unique @default(sequence())
-  userId Int
-  propertyId String
-  reportNickName String?
-  creation_date DateTime @default(now())
-  last_modified DateTime @updatedAt
-  website String?
-  address String?
-  city String?
-  state String?
-  zip String?
-  image String?
-  interest Float?
-  reserves Float?
-  closing_cost Float?
-  selling_cost Float?
-  exit_cap Float?
-  loan_to_value Float?
-  property_tax Float?
-  year_one_cap Float?
-  unlevered_irr Float?
-  levered_irr Float?
-  unlevered_mom Float?
-  levered_mom Float?
-  levered_profit Float?
-  bedrooms Int?
-  bathrooms Int?
-  year_built Int?
-  water_source String?
-  property_subtype String?
-  listing_price Float?
-  sales_status String?
-  sqft Int?
-  all_cash_on_cash Json?
-  all_insurance Json?
-  all_water Json?
-  all_electricity Json?
-  all_RM Json?
-  all_vacancy Json?
-  all_revenue Json?
-  all_management Json?
-  all_HOA Json?
-  all_utilities Json?
-  all_gas Json?
-  all_capex Json?
-  all_total_expenses Json?
-  all_total_loan_payment Json?
-  all_principal Json?
-  all_interest Json?
-  all_loan_balance Json?
-  all_balloon Json?
-  all_ending_balance Json?
-  all_NOI Json?
-  all_NOI_margin Json?
+  reportId                 Int      @id @unique @default(sequence(maxValue: 2147483647))
+  userId                   Int
+  propertyId               String
+  reportNickName           String?
+  creation_date            DateTime @default(now())
+  last_modified            DateTime @updatedAt
+  website                  String?
+  address                  String?
+  city                     String?
+  state                    String?
+  zip                      String?
+  image                    String?
+  interest                 Float?
+  closing_cost             Float?
+  exit_cap                 Float?
+  loan_to_value            Float?
+  year_one_cap             Float?
+  unlevered_irr            Float?
+  levered_irr              Float?
+  unlevered_mom            Float?
+  levered_mom              Float?
+  levered_profit           Float?
+  bedrooms                 Int?
+  bathrooms                Int?
+  year_built               Int?
+  water_source             String?
+  property_subtype         String?
+  listing_price            Float?
+  sales_status             String?
+  sqft                     Int?
+  all_cash_on_cash         Json?
+  all_insurance            Json?
+  all_water                Json?
+  all_electricity          Json?
+  all_RM                   Json?
+  all_vacancy              Json?
+  all_revenue              Json?
+  all_management           Json?
+  all_HOA                  Json?
+  all_utilities            Json?
+  all_gas                  Json?
+  all_capex                Json?
+  all_total_expenses       Json?
+  all_total_loan_payment   Json?
+  all_principal            Json?
+  all_interest             Json?
+  all_loan_balance         Json?
+  all_balloon              Json?
+  all_ending_balance       Json?
+  all_NOI                  Json?
+  all_NOI_margin           Json?
   all_net_deposit_proceeds Json?
-  all_unlevered_yield Json?
-  all_DSCR Json?
-  all_debt_yield Json?
-  all_NOI_growth Json?
-  all_CFG_growth Json?
+  all_unlevered_yield      Json?
+  all_DSCR                 Json?
+  all_debt_yield           Json?
+  all_NOI_growth           Json?
+  all_CFG_growth           Json?
+  selling_cost             Float?
+  reserves                 Float?
+  property_tax             Float?
 }
 
 model BRRRRReports {
-  reportId  Int @id @unique @default(sequence())
-  userId Int
-  propertyId String
-  reportNickName String?
-  creation_date DateTime @default(now())
-  last_modified DateTime @updatedAt
-  website String?
-  address String?
-  city String?
-  state String?
-  zip String?
-  property_tax Float?
-  image String?
-  hard_money_interest Float?
-  refinance_interest Float?
-  hard_money_closing_cost Float?
+  reportId                 Int      @id @unique @default(sequence(maxValue: 2147483647))
+  userId                   Int
+  propertyId               String
+  reportNickName           String?
+  creation_date            DateTime @default(now())
+  last_modified            DateTime @updatedAt
+  website                  String?
+  address                  String?
+  city                     String?
+  state                    String?
+  zip                      String?
+  property_tax             Float?
+  image                    String?
+  hard_money_interest      Float?
+  refinance_interest       Float?
+  hard_money_closing_cost  Float?
   hard_money_loan_to_value Float?
-  hard_money_loan_to_cost Float?
-  refinance_closing_costs Float?
-  total_monthly_expense Float?
-  total_cash_investment Float?
-  months_until_refinance Float?
-  rehab_costs Float?
-  cap_rate Float?
-  cap_rate_after_repair Float?
-  levered_profit Float?
-  cash_on_cash_return Float?
-  annual_cash_flow Float?
-  total_equity Float?
-  NOI Float?
-  bedrooms Int?
-  bathrooms Int?
-  year_built Int?
-  water_source String?
-  property_subtype String?
-  listing_price Float?
-  sales_status String?
-  sqft Int?
-  down_payment Float?
-  vacancy Float?
-  management_fee Float?
-  insurance Float?
-  repair_maintenance Float?
-  water Float?
-  gas Float?
-  electricity Float?
-  captial_expenditure Float?
-  utilities Float?
-  HOA Float?
-  after_repair_value Float?
+  hard_money_loan_to_cost  Float?
+  refinance_closing_costs  Float?
+  total_monthly_expense    Float?
+  total_cash_investment    Float?
+  months_until_refinance   Float?
+  rehab_costs              Float?
+  cap_rate                 Float?
+  cap_rate_after_repair    Float?
+  levered_profit           Float?
+  cash_on_cash_return      Float?
+  annual_cash_flow         Float?
+  total_equity             Float?
+  NOI                      Float?
+  bedrooms                 Int?
+  bathrooms                Int?
+  year_built               Int?
+  water_source             String?
+  property_subtype         String?
+  listing_price            Float?
+  sales_status             String?
+  sqft                     Int?
+  down_payment             Float?
+  vacancy                  Float?
+  management_fee           Float?
+  insurance                Float?
+  repair_maintenance       Float?
+  water                    Float?
+  gas                      Float?
+  electricity              Float?
+  captial_expenditure      Float?
+  utilities                Float?
+  HOA                      Float?
+  after_repair_value       Float?
 }
 
 model UserTokens {
-  id Int @id @unique @default(sequence())
-  userId Int @unique
-  token String
+  id            Int      @id @unique @default(sequence(maxValue: 2147483647))
+  userId        Int      @unique
+  token         String
   creation_date DateTime @default(now())
   last_modified DateTime @updatedAt
-  time_to_live Int
+  time_to_live  Int
+}
+
+model Tutorials {
+  id   Int    @id @unique @default(sequence(maxValue: 2147483647))
+  name String
 }
 
 model Users {
-  id Int @id @unique @default(sequence())
-  username String @unique
-  email String @unique
-  privateKey String
-  uniqueToken String 
-  password String
+  id            Int      @id @unique @default(sequence(maxValue: 2147483647))
+  username      String   @unique
+  email         String   @unique
+  privateKey    String
+  uniqueToken   String
+  password      String
   creation_date DateTime @default(now())
-
+  tutorials     Json?
 }
