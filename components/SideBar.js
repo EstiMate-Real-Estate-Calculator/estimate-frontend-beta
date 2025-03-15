@@ -20,6 +20,16 @@ const Sidebar = () => {
           Extension
         </a>
       </div>
+
+      {/* Promotion Video Link */}
+      <a
+        href='https://www.youtube.com/watch?v=47sO3SZWVpc'
+        target="_blank"
+        rel="noopener noreferrer"
+        className='text-lg text-[#155E75] font-medium hover:underline hover:text-[#0E4B5C] transition duration-200 mt-4'
+      >
+        Promo Video
+      </a>
     </div>
   );
 };
