@@ -1,7 +1,20 @@
 import UserHandler from '@lib/auth/userHandler';
 import TutorialHandler from '@/lib/tutorialHandler';
 
-// Create a new tutorial for each user
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  // Respond to preflight requests with the CORS headers
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 export async function POST(request) {
   try {
     const { name } = await request.json();
@@ -21,29 +34,25 @@ export async function POST(request) {
 
     return new Response(JSON.stringify({ message: 'success' }), {
       status: 201, // Created
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message || 'Internal Server Error' }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }
 }
 
-// List tutorials
-// - If ?userId=123 is provided, list that user's tutorials
-// - If no query param, you can decide to either fetch all or return an error
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    console.log(searchParams)
     const id = searchParams.get('id');
 
-    // If userId is provided, fetch that usr's tutorials
+    // If a user ID is provided, fetch that user's tutorials
     if (id) {
       const tutorial = await TutorialHandler.getTutorialById(Number(id));
       return new Response(
@@ -51,25 +60,18 @@ export async function GET(request) {
           message: `Tutorial for user ID ${id}`,
           data: tutorial,
         }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else {
-      // If you want to list ALL tutorials, you'd need a getAllTutorials() method
-      // in your TutorialHandler. Example:
-      //
-      // const allTutorials = await TutorialHandler.getAllTutorials();
-      // return new Response(JSON.stringify({ data: allTutorials }), { ... });
-      //
-      // Or, if you only allow fetching by userId, return a 400 or 404:
       return new Response(
         JSON.stringify({ message: 'No userId provided.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
   } catch (error) {
     return new Response(
       JSON.stringify({ error: 'Internal Server Error', details: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 }
