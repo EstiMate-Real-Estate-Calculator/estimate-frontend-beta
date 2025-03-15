@@ -154,10 +154,10 @@ jobs:
               location / {
                   proxy_pass http://localhost:3000;
                   proxy_http_version 1.1;
-                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Upgrade $http_upgrade;
                   proxy_set_header Connection upgrade;
-                  proxy_set_header Host \$host;
-                  proxy_cache_bypass \$http_upgrade;
+                  proxy_set_header Host $host;
+                  proxy_cache_bypass $http_upgrade;
               }
           }
           NGINXEOF
@@ -166,14 +166,4 @@ jobs:
           echo "Testing Nginx configuration..."
           sudo nginx -t && sudo systemctl reload nginx
           echo "Nginx configured successfully."
-          SSHEOF
-
-      - name: Obtain SSL Certificate with Certbot
-        run: |
-          ssh -o StrictHostKeyChecking=no -t ${{ env.DROPLET_USER }}@${{ env.DROPLET_IP }} << 'SSHEOF'
-          set -e
-          echo "Installing Certbot and its Nginx plugin..."
-          sudo apt update && sudo apt install -y certbot python3-certbot-nginx
-          echo "Obtaining and configuring SSL certificate for esti-matecalculator.com..."
-          sudo certbot --nginx --non-interactive --agree-tos --redirect --email developwithjonathan@gmail.com -d esti-matecalculator.com -d www.esti-matecalculator.com
           SSHEOF
