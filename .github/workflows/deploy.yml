@@ -175,5 +175,5 @@ jobs:
           echo "Installing Certbot and its Nginx plugin..."
           sudo apt update && sudo apt install -y certbot python3-certbot-nginx
           echo "Obtaining and configuring SSL certificate for esti-matecalculator.com..."
-          sudo certbot --nginx --non-interactive --agree-tos --redirect --email your-email@example.com -d esti-matecalculator.com -d www.esti-matecalculator.com
+          sudo certbot --nginx --non-interactive --agree-tos --redirect --email developwithjonathan@gmail.com -d esti-matecalculator.com -d www.esti-matecalculator.com
           SSHEOF
