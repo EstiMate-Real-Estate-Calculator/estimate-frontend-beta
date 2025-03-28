@@ -2,71 +2,89 @@ import { NextResponse } from 'next/server';
 import ReportsHandler from '@lib/reportsHandler';
 import validateCookie from '@lib/auth/validateCookie';
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
-  "Access-Control-Allow-Methods": "GET, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+// Define allowed origins. Update this list as needed.
+const allowedOrigins = [
+  "http://esti-matecalculator.com",
+  "https://www.esti-matecalculator.com",
+  "chrome-extension://ibgdanpaoapljanhifdofglnibahljbe"
+];
 
-export async function OPTIONS() {
-  // Respond to preflight requests with the CORS headers
+// Helper function to build dynamic CORS headers based on the request's origin.
+function getCorsHeaders(request) {
+  const origin = request.headers.get("origin");
+  const headers = {
+    "Access-Control-Allow-Methods": "GET, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+  if (allowedOrigins.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  } else {
+    headers["Access-Control-Allow-Origin"] = "null";
+  }
+  return headers;
+}
+
+export async function OPTIONS(request) {
+  const headers = getCorsHeaders(request);
+  // Respond to preflight requests with the dynamic CORS headers.
   return new NextResponse(null, {
     status: 200,
-    headers: corsHeaders,
+    headers,
   });
 }
 
 export async function GET(request, { params }) {
+  const headers = getCorsHeaders(request);
   const { id } = params;
 
   if (!id) {
     return NextResponse.json(
       { error: 'ID is required' },
-      { status: 400, headers: corsHeaders }
+      { status: 400, headers }
     );
   }
 
   try {
-    // Validate request is coming from a valid authToken
+    // Validate that the request is coming from a valid authToken.
     const validCookie = await validateCookie();
 
     if (validCookie) {
-      // Get the report for the user
+      // Get the report for the user.
       const report = await ReportsHandler.getReportById(id, validCookie.userId);
 
       if (!report) {
         return NextResponse.json(
           { error: 'Report not found' },
-          { status: 404, headers: corsHeaders }
+          { status: 404, headers }
         );
       }
 
-      return NextResponse.json(report, { status: 200, headers: corsHeaders });
+      return NextResponse.json(report, { status: 200, headers });
     } else {
-      // Return unauthorized response
       return NextResponse.json(
         { error: 'Unauthorized' },
-        { status: 401, headers: corsHeaders }
+        { status: 401, headers }
       );
     }
   } catch {
     return NextResponse.json(
       { error: 'Failed to fetch report.' },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers }
     );
   }
 }
 
 export async function PUT(request, { params }) {
+  const headers = getCorsHeaders(request);
   const { id } = params;
   const reportData = await request.json();
 
   try {
-    // Validate request is coming from a valid authToken
+    // Validate that the request is coming from a valid authToken.
     const validCookie = await validateCookie();
 
     if (validCookie) {
-      // Update the report
+      // Update the report.
       const updatedReport = await ReportsHandler.updateReport(
         id,
         validCookie.userId,
@@ -76,35 +94,35 @@ export async function PUT(request, { params }) {
       if (!updatedReport) {
         return NextResponse.json(
           { error: 'Report not found' },
-          { status: 404, headers: corsHeaders }
+          { status: 404, headers }
         );
       }
 
-      return NextResponse.json(updatedReport, { status: 200, headers: corsHeaders });
+      return NextResponse.json(updatedReport, { status: 200, headers });
     } else {
-      // Return unauthorized response
       return NextResponse.json(
         { error: 'Unauthorized' },
-        { status: 401, headers: corsHeaders }
+        { status: 401, headers }
       );
     }
   } catch {
     return NextResponse.json(
       { error: 'Failed to update report.' },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers }
     );
   }
 }
 
 export async function DELETE(request, { params }) {
+  const headers = getCorsHeaders(request);
   const { id } = params;
 
   try {
-    // Validate request is coming from a valid authToken
+    // Validate that the request is coming from a valid authToken.
     const validCookie = await validateCookie();
 
     if (validCookie) {
-      // Attempt to delete the report
+      // Attempt to delete the report.
       const deletedReport = await ReportsHandler.deleteReport(
         id,
         validCookie.userId
@@ -113,25 +131,24 @@ export async function DELETE(request, { params }) {
       if (!deletedReport) {
         return NextResponse.json(
           { error: 'Report not found' },
-          { status: 404, headers: corsHeaders }
+          { status: 404, headers }
         );
       }
 
       return NextResponse.json(
         { message: 'Report deleted successfully' },
-        { status: 204, headers: corsHeaders }
+        { status: 204, headers }
       );
     } else {
-      // Return unauthorized response
       return NextResponse.json(
         { error: 'Unauthorized' },
-        { status: 401, headers: corsHeaders }
+        { status: 401, headers }
       );
     }
   } catch {
     return NextResponse.json(
       { error: 'Failed to delete report.' },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers }
     );
   }
 }
