@@ -1,5 +1,32 @@
 import { NextResponse } from 'next/server';
 
+// --- CORS Configuration ---
+// Define allowed origins. Adjust this list as needed.
+// Consider adding localhost for development if necessary.
+const allowedOrigins = [
+  "http://esti-matecalculator.com",
+  "https://www.esti-matecalculator.com",
+  "chrome-extension://ibgdanpaoapljanhifdofglnibahljbe",
+  // Add your Vercel preview/production URLs if needed
+  "https://estimate-frontend-beta-git-develop-jons-projects-566ae2e5.vercel.app"
+];
+
+function getCorsHeaders(request) {
+  const origin = request.headers.get("origin");
+  const headers = {
+    "Access-Control-Allow-Methods": "GET, OPTIONS", // Only GET and OPTIONS needed for this route
+    "Access-Control-Allow-Headers": "Content-Type, Authorization", // Adjust if other headers are needed
+  };
+  // Allow requests from listed origins or if origin is null/undefined (e.g., server-to-server, curl)
+  if (!origin || allowedOrigins.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin || "*"; // Be specific if possible
+  } else {
+    // Optionally handle disallowed origins explicitly, though returning no Allow-Origin header is standard
+    // console.warn(`Origin ${origin} not allowed.`);
+  }
+  return headers;
+}
+
 // --- Helper Functions (Provided by User, slightly adapted for server-side) ---
 
 // Placeholder for the formatting function - implement based on your needs
@@ -33,6 +60,7 @@ async function fetchData(url, headers, retries) {
       }
       // Wait before retrying
       await new Promise(resolve => setTimeout(resolve, 1500)); // Increased delay
+      console.log(`Retrying ${url} (${retries} retries left)...`);
       return fetchData(url, headers, retries - 1); // Return the promise
     } else if (!response.ok) {
       // Handle other client errors (e.g., 400, 401, 404)
@@ -79,6 +107,7 @@ async function estimateRent(params) {
   const headers = { 'X-Api-Key': API_KEY };
   const numOfRetries = 3;
 
+  console.log("Requesting Rent Estimate:", url); // Logging
   return fetchData(url, headers, numOfRetries);
 }
 
@@ -103,19 +132,40 @@ async function comparables(params) {
 
   let compCount = 5; // Or get from params if needed: parseInt(params.get('compCount') || '5', 10);
 
+  // Note: Rentcast value AVM doesn't seem to adjust per unit in the same way as rent.
+  // If specific logic is needed based on units for value, add it here.
 
   const url = `https://api.rentcast.io/v1/avm/value?address=${encodeURIComponent(address)}&squareFootage=${squareFootage}&propertyType=${propertyType}&daysOld=${daysOld}&bathrooms=${bathrooms}&bedrooms=${bedrooms}&compCount=${compCount}`;
   const headers = { 'X-Api-Key': API_KEY };
   const numOfRetries = 3;
 
+  console.log("Requesting Comparables:", url); // Logging
   return fetchData(url, headers, numOfRetries);
 }
 
 
-// --- API Route Handler ---
+// --- API Route Handlers ---
+
+export async function OPTIONS(request) {
+  const corsHeaders = getCorsHeaders(request);
+  // Respond to preflight requests with the dynamic CORS headers
+  return new Response(null, {
+    status: 204, // Use 204 No Content for OPTIONS response
+    headers: corsHeaders,
+  });
+}
 
 export async function GET(request) {
+  const corsHeaders = getCorsHeaders(request);
   const { searchParams } = new URL(request.url);
+
+  // Check if the origin is allowed before proceeding
+  if (!corsHeaders['Access-Control-Allow-Origin']) {
+      return NextResponse.json(
+          { message: "Origin not allowed" },
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } } // Still include CORS headers in the response
+      );
+  }
 
   try {
     // Call both external API functions concurrently
@@ -130,14 +180,20 @@ export async function GET(request) {
       comparables: comparablesResponse,
     };
 
-    return NextResponse.json(responseData, { status: 200 });
+    return NextResponse.json(responseData, {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
 
   } catch (error) {
     console.error("API Route Error:", error.message);
     // Return a structured error response
     return NextResponse.json(
       { message: "Failed to fetch property data", error: error.message },
-      { status: 500 } // Use 500 for server-side/external API issues
+      {
+        status: 500, // Use 500 for server-side/external API issues
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
     );
   }
 }
