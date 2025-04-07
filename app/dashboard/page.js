@@ -57,12 +57,15 @@ export default function Page() {
       }
 
       const data = await res.json();
-      setProperties(data.properties || []);
+      // Handle both { properties: [...] } and [...] structures
+      const reportsArray = Array.isArray(data) ? data : (data?.properties || []);
+      setProperties(reportsArray);
     } catch (err) {
       const fullError = err.stack || err.message || JSON.stringify(err);
       console.error("Full fetch error:", fullError);
       setError('Click to view error details');
       setErrorDetails(fullError);
+      
       setIsAlertVisible(true);
     }
   };
