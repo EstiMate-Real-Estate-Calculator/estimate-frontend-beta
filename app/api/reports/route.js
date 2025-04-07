@@ -56,6 +56,8 @@ export async function POST(request) {
 
     const { reportData, username, reportType } = data;
 
+    console.log("Received report data:", JSON.stringify(reportData, null, 2)); // Log incoming reportData
+
     if (!username) {
         return NextResponse.json(
           { error: 'Bad Request: Missing username.' },
@@ -71,9 +73,9 @@ export async function POST(request) {
         );
     }
 
-
     if (reportType === "rental") {
       // Create a new report for the user
+      console.log("Data being passed to createReport:", JSON.stringify(reportData, null, 2)); // Log data before sending
       const newReport = await ReportsHandler.createReport({
         ...reportData,
         userId: user.id,
@@ -88,9 +90,10 @@ export async function POST(request) {
 
   } catch (error) {
     console.error("Error creating report:", error); // Log the full error server-side
+    let errorMessage = 'Failed to create report.';
     return NextResponse.json(
       {
-        message: 'Failed to create report.',
+        message: errorMessage,
         error: error.message, // Include the specific error message
         details: error.stack // Optional: Include stack trace for debugging (consider removing in production)
       },

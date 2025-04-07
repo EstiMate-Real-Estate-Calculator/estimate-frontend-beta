@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "cockroachdb"
-  url      = env("DATABASE_URL")
-}
+     provider = "postgresql"
+     url      = env("DATABASE_URL")
+   }
 
 model Reports {
-  reportId                 Int      @id @unique @default(sequence(maxValue: 2147483647))
+  reportId                 Int      @id @unique @default(autoincrement())
   userId                   Int
   propertyId               String
   reportNickName           String?
@@ -17,6 +17,7 @@ model Reports {
   website                  String?
   address                  String?
   city                     String?
+  units                    Float?
   state                    String?
   zip                      String?
   image                    String?
@@ -61,17 +62,22 @@ model Reports {
   all_NOI_margin           Json?
   all_net_deposit_proceeds Json?
   all_unlevered_yield      Json?
+  all_levered_cf           Json?
+  all_unlevered_cf         Json?
   all_DSCR                 Json?
   all_debt_yield           Json?
   all_NOI_growth           Json?
   all_CFG_growth           Json?
+  all_levered_cf_growth    Json?
+  all_property_tax         Json?
+  expense_growth           Float?
+  revenue_growth           Float?
   selling_cost             Float?
   reserves                 Float?
-  property_tax             Float?
 }
 
 model BRRRRReports {
-  reportId                 Int      @id @unique @default(sequence(maxValue: 2147483647))
+  reportId                 Int      @id @unique @default(autoincrement())
   userId                   Int
   propertyId               String
   reportNickName           String?
@@ -124,7 +130,7 @@ model BRRRRReports {
 }
 
 model UserTokens {
-  id            Int      @id @unique @default(sequence(maxValue: 2147483647))
+  id            Int      @id @unique @default(autoincrement())
   userId        Int      @unique
   token         String
   creation_date DateTime @default(now())
@@ -133,12 +139,12 @@ model UserTokens {
 }
 
 model Tutorials {
-  id   Int    @id @unique @default(sequence(maxValue: 2147483647))
+  id   Int    @id @unique @default(autoincrement())
   name String
 }
 
 model Users {
-  id            Int      @id @unique @default(sequence(maxValue: 2147483647))
+  id            Int      @id @unique @default(autoincrement())
   username      String   @unique
   email         String   @unique
   privateKey    String

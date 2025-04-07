@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // <-- Add this: Sets the base for path resolution
+    "paths": { // <-- Add this block: Defines the aliases
+      "@components/*": ["components/*"],
+      "@lib/*": ["lib/*"]
+      // Add other aliases here if needed, e.g.:
+      // "@/styles/*": ["styles/*"],
+      // "@/utils/*": ["utils/*"]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

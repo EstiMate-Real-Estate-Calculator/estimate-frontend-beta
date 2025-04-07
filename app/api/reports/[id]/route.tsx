@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import ReportsHandler from '@lib/reportsHandler';
-import validateCookie from '@lib/auth/validateCookie';
+import { NextResponse } from "next/server";
+import ReportsHandler from "@lib/reportsHandler";
+import validateCookie from "@lib/auth/validateCookie";
 
 // Define allowed origins. Update this list as needed.
 const allowedOrigins = [
@@ -9,7 +9,7 @@ const allowedOrigins = [
   "chrome-extension://ibgdanpaoapljanhifdofglnibahljbe",
   // Add your Vercel preview/production URLs if needed
   "chrome-extension://dlimagmnfejadhgiedoepmbpmnkceddo",
-  "https://estimate-frontend-beta-git-develop-jons-projects-566ae2e5.vercel.app"
+  "https://estimate-frontend-beta-git-develop-jons-projects-566ae2e5.vercel.app",
 ];
 
 // Helper function to build dynamic CORS headers based on the request's origin.
@@ -42,7 +42,7 @@ export async function GET(request, { params }) {
 
   if (!id) {
     return NextResponse.json(
-      { error: 'ID is required' },
+      { error: "ID is required" },
       { status: 400, headers }
     );
   }
@@ -55,9 +55,11 @@ export async function GET(request, { params }) {
       // Get the report for the user.
       const report = await ReportsHandler.getReportById(id, validCookie.userId);
 
+      console.log("REP", report);
+
       if (!report) {
         return NextResponse.json(
-          { error: 'Report not found' },
+          { error: "Report not found" },
           { status: 404, headers }
         );
       }
@@ -65,13 +67,20 @@ export async function GET(request, { params }) {
       return NextResponse.json(report, { status: 200, headers });
     } else {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: "Unauthorized" },
         { status: 401, headers }
       );
     }
-  } catch {
+  } catch (error) {
+    console.error("GET /api/reports/[id] error:", error);
+
     return NextResponse.json(
-      { error: 'Failed to fetch report.' },
+      {
+        error: "Failed to fetch report.",
+        message: error?.message || "Unknown error",
+        stack:
+          process.env.NODE_ENV === "development" ? error?.stack : undefined,
+      },
       { status: 500, headers }
     );
   }
@@ -96,7 +105,7 @@ export async function PUT(request, { params }) {
 
       if (!updatedReport) {
         return NextResponse.json(
-          { error: 'Report not found' },
+          { error: "Report not found" },
           { status: 404, headers }
         );
       }
@@ -104,13 +113,13 @@ export async function PUT(request, { params }) {
       return NextResponse.json(updatedReport, { status: 200, headers });
     } else {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: "Unauthorized" },
         { status: 401, headers }
       );
     }
   } catch {
     return NextResponse.json(
-      { error: 'Failed to update report.' },
+      { error: "Failed to update report." },
       { status: 500, headers }
     );
   }
@@ -133,24 +142,24 @@ export async function DELETE(request, { params }) {
 
       if (!deletedReport) {
         return NextResponse.json(
-          { error: 'Report not found' },
+          { error: "Report not found" },
           { status: 404, headers }
         );
       }
 
       return NextResponse.json(
-        { message: 'Report deleted successfully' },
+        { message: "Report deleted successfully" },
         { status: 204, headers }
       );
     } else {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: "Unauthorized" },
         { status: 401, headers }
       );
     }
   } catch {
     return NextResponse.json(
-      { error: 'Failed to delete report.' },
+      { error: "Failed to delete report." },
       { status: 500, headers }
     );
   }

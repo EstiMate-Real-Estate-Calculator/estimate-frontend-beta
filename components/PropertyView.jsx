@@ -2,8 +2,8 @@ import PropertyCard from '@components/PropertyCard';
 import useSWR from 'swr';
 import React, { Suspense, useState, useCallback } from 'react';
 import Image from 'next/image';
-import ExportClass from '@/lib/exportClass';
-import AlertBubble from '@/components/AlertBubble'; // Make sure you have this component
+import ExportClass from '@lib/exportClass';
+import AlertBubble from '@components/AlertBubble'; // Make sure you have this component
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
