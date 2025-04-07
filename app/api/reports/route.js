@@ -7,7 +7,10 @@ import { NextResponse } from 'next/server';
 const allowedOrigins = [
   "http://esti-matecalculator.com",
   "https://www.esti-matecalculator.com",
-  "chrome-extension://ibgdanpaoapljanhifdofglnibahljbe"
+  "chrome-extension://ibgdanpaoapljanhifdofglnibahljbe",
+  // Add your Vercel preview/production URLs if needed
+  "chrome-extension://dlimagmnfejadhgiedoepmbpmnkceddo",
+  "https://estimate-frontend-beta-git-develop-jons-projects-566ae2e5.vercel.app"
 ];
 
 // Helper function to build dynamic CORS headers based on the request's origin.
@@ -44,32 +47,56 @@ export async function POST(request) {
     // Parse the request body
     const data = await request.json();
 
-    if (data) {
-      const { reportData, username, reportType } = data;
-      const user = await UserHandler.getUserByUsername(username);
-
-      if (reportType === "rental") {
-        // Create a new report for the user
-        const newReport = await ReportsHandler.createReport({
-          ...reportData,
-          userId: user.id,
-        });
-        return NextResponse.json(newReport, { status: 201, headers });
-      } else {
-        return NextResponse.json(
-          { error: 'Invalid Report Type' },
-          { status: 401, headers }
-        );
-      }
-    } else {
+    if (!data) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Unauthorized: Missing request body.' },
         { status: 401, headers }
       );
     }
+
+    const { reportData, username, reportType } = data;
+
+    console.log("Received report data:", JSON.stringify(reportData, null, 2)); // Log incoming reportData
+
+    if (!username) {
+        return NextResponse.json(
+          { error: 'Bad Request: Missing username.' },
+          { status: 400, headers }
+        );
+    }
+
+    const user = await UserHandler.getUserByUsername(username);
+    if (!user) {
+        return NextResponse.json(
+          { error: `User not found: ${username}` },
+          { status: 404, headers }
+        );
+    }
+
+    if (reportType === "rental") {
+      // Create a new report for the user
+      console.log("Data being passed to createReport:", JSON.stringify(reportData, null, 2)); // Log data before sending
+      const newReport = await ReportsHandler.createReport({
+        ...reportData,
+        userId: user.id,
+      });
+      return NextResponse.json(newReport, { status: 201, headers });
+    } else {
+      return NextResponse.json(
+        { error: `Invalid Report Type: ${reportType}` },
+        { status: 400, headers }
+      );
+    }
+
   } catch (error) {
+    console.error("Error creating report:", error); // Log the full error server-side
+    let errorMessage = 'Failed to create report.';
     return NextResponse.json(
-      { error: 'Failed to create report.' },
+      {
+        message: errorMessage,
+        error: error.message, // Include the specific error message
+        details: error.stack // Optional: Include stack trace for debugging (consider removing in production)
+      },
       { status: 500, headers }
     );
   }
@@ -92,8 +119,13 @@ export async function GET(request) {
       );
     }
   } catch (error) {
+    console.error("Error fetching reports:", error); // Log the full error server-side
     return NextResponse.json(
-      { error: 'Failed to fetch reports' },
+      {
+        message: 'Failed to fetch reports',
+        error: error.message,
+        details: error.stack // Optional
+      },
       { status: 500, headers }
     );
   }

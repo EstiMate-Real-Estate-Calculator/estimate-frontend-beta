@@ -1,11 +1,20 @@
 import UserHandler from '@lib/auth/userHandler';
-import TutorialHandler from '@/lib/tutorialHandler';
+import TutorialHandler from '@lib/tutorialHandler';
 
-// Define allowed origins. Update this list as needed.
+// app/api/backup/route.js
+import { knex } from 'knex';
+
+const db = knex({
+  client: 'pg', // Explicitly set to PostgreSQL
+  connection: process.env.DATABASE_URL,
+});
+
 const allowedOrigins = [
-  "chrome-extension://jlbajdeadaajjafapaochogphndfeicb",
   "http://esti-matecalculator.com",
-  "https://www.esti-matecalculator.com"
+  "https://www.esti-matecalculator.com",
+  "chrome-extension://ibgdanpaoapljanhifdofglnibahljbe",
+  "chrome-extension://dlimagmnfejadhgiedoepmbpmnkceddo",
+  "https://estimate-frontend-beta-git-develop-jons-projects-566ae2e5.vercel.app"
 ];
 
 function getCorsHeaders(request) {
