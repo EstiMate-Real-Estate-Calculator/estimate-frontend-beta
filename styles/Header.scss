@@ -1,0 +1,59 @@
+$primary-color: #155E75;
+$light-bg: #f0f2f5;
+$tag-bg: #FFEAD5;
+$tag-color: #986636;
+$border-color: #DCD4E2;
+$radius: 8px;
+
+.customHeader {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: $primary-color;
+    color: white;
+    padding: 0 10%;
+    text-align: left;
+    font-size: 24px;
+    z-index: 99999;
+
+    .logoSection {
+        cursor: pointer;
+    }
+
+    .signOutWrapper {
+        display: flex;
+        align-items: center;
+
+        .customLoginButton {
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+
+            span {
+                background: white;
+                color: $primary-color;
+                border-radius: 12px;
+                padding: 0.4rem 0.7rem;
+                margin-left: 0.5rem;
+                height: 100%;
+            }
+        }
+
+        svg {
+            cursor: pointer;
+        }
+    }
+
+    .menuButton {
+        color: white;
+
+        .span {
+            font-size: 1.5rem;
+        }
+    }
+}
+
+.ant-dropdown {
+    z-index: 99999999999 !important;
+    min-width: 6vw !important;
+}

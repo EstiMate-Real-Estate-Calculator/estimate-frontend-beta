@@ -1,0 +1,907 @@
+$primary-color: #155E75;
+$light-bg: #f0f2f5;
+$tag-bg: #FFEAD5;
+$tag-color: #986636;
+$border-color: #DCD4E2;
+$radius: 8px;
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.font-bold {
+    font-family: 'Poppins', sans-serif;
+}
+
+.text-xl {
+    font-family: 'Poppins', sans-serif;
+}
+
+.detailWrapper {
+    .customHeader {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        background: $primary-color;
+        color: white;
+        padding: 0 10%;
+        text-align: left;
+        font-size: 24px;
+        z-index: 99999999999;
+
+        .logoSection {
+            cursor: pointer;
+        }
+
+        .customLoginButton {
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+
+            span {
+                background: white;
+                color: $primary-color;
+                border-radius: 12px;
+                padding: 0.4rem 0.7rem;
+                margin-left: 0.5rem;
+                height: 100%;
+            }
+        }
+
+        .menuButton {
+            color: white;
+
+            .span {
+                font-size: 1.5rem;
+            }
+        }
+    }
+
+    .ant-layout-content {
+        padding: 1% 10% !important;
+        background: #fff;
+
+        @media screen and (max-width:750px) {
+            padding: 8% 10% !important;
+        }
+
+        .topSection {
+            .tagSection {
+                background: $tag-bg;
+                color: $tag-color;
+                font-weight: 600;
+                font-size: 0.75rem;
+                border-radius: 1.875rem;
+                padding: 0.5% 1%;
+                width: fit-content;
+            }
+
+            .propertyInfoRow {
+                .propertyDetailColumn {
+                    .propertyHeader {
+                        margin-top: 1.5%;
+
+                        .locationWrapper {
+                            display: flex;
+                            align-items: center;
+                            font-size: 1rem;
+                            font-weight: 400;
+                            line-height: 28px;
+
+                            svg {
+                                color: $primary-color;
+                                margin-right: 0.5rem;
+                            }
+                        }
+
+                        .tagWrapper {
+                            display: flex;
+                            align-items: center;
+                            margin-top: 0.6rem;
+
+                            .tag {
+                                background: $primary-color;
+                                color: white;
+                                margin-right: 0.5rem;
+                                border-radius: 12px;
+                                font-size: 0.75rem;
+                                padding: 0.26% 1.2%;
+                                font-family: 'Poppins', sans-serif;
+                            }
+                        }
+                    }
+
+                    // h2 {
+                    //     color: $primary-color;
+                    //     font-weight: 600;
+                    //     font-size: 30px;
+                    //     font-family: 'Poppins', sans-serif;
+
+                    //     @media screen and (max-width:750px) {
+                    //         font-size: 24px;
+                    //     }
+                    // }
+                }
+
+                .priceColumn {
+                    .topRight {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+
+                        @media screen and (max-width:750px) {
+                            flex-direction: row;
+                            padding: 1rem 0;
+                        }
+
+                        .iconWrapper {
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 1rem;
+
+                            .one {
+                                margin-right: 0.6rem;
+                            }
+
+                            svg {
+                                font-size: 1.5rem;
+                                color: $primary-color;
+                                font-weight: 600;
+                                cursor: pointer;
+                            }
+                        }
+
+                        .priceSection {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-end;
+                            width: 100%;
+
+                            h3 {
+                                font-size: 16px;
+                                font-weight: 400;
+                                text-transform: uppercase;
+                                line-height: 24px;
+                                font-family: 'Poppins', sans-serif;
+                            }
+
+                            span {
+                                color: $primary-color;
+                                font-size: 24px;
+                                font-weight: 600;
+                                line-height: 36px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .bannerWrapper {
+            .bannerImage {
+                margin: 3% 0 2%;
+
+                .ant-image {
+                    width: 100%;
+
+                    img {
+                        border-radius: 10px;
+                        max-height: 51vh;
+                        height: 100%;
+                    }
+                }
+            }
+
+            .rightSection {
+                margin: 8.5% 0 2% 2%;
+
+                .afterValue,
+                .valueGraph {
+                    width: 100%;
+                    border: 1px solid $border-color;
+                    border-radius: $radius;
+                    margin-top: 1rem;
+
+                    .top {
+                        background: $primary-color;
+                        color: white;
+                        text-align: center;
+                        padding: 1.2rem 1rem;
+                        font-weight: 600;
+                        font-size: 16px;
+                        border-radius: $radius $radius 0 0;
+                        text-transform: uppercase;
+                        font-family: 'Poppins', sans-serif;
+                    }
+
+                    .bottom {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 2rem 1rem;
+                        font-weight: 400;
+                        font-size: 26px;
+                        font-family: 'Poppins', sans-serif;
+
+                        .grey {
+                            color: #5C5C5C;
+                        }
+
+                        svg {
+                            font-size: 24px;
+                        }
+                    }
+                }
+
+                .valueGraph .bottom {
+                    padding: 0;
+                    overflow: hidden;
+                }
+            }
+        }
+
+        .widgetContainer {
+            .widgetWrapper {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                width: 100%;
+                border: 1px solid $border-color;
+                border-radius: $radius;
+
+                .widgets {
+                    flex: 1;
+                    min-width: 150px;
+                    border-right: 1px solid $border-color;
+
+                    &:first-child .top {
+                        border-radius: $radius 0 0 0;
+                    }
+
+                    &:last-child {
+                        border-right: none !important;
+
+
+                        .top {
+                            border-radius: 0 $radius 0 0;
+                        }
+                    }
+
+                    .top {
+                        background: $primary-color;
+                        color: white;
+                        padding: 0.5rem;
+                        font-weight: 600;
+                        font-size: 12px;
+                        text-align: center;
+                        font-family: 'Poppins', sans-serif;
+                    }
+
+                    .bottom {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 2rem;
+                        font-weight: 700;
+                        line-height: 20px;
+                        font-family: 'Poppins', sans-serif;
+                    }
+                }
+
+                // Responsive styles for mobile
+                @media (max-width: 768px) {
+                    flex-direction: column;
+
+                    .widgets {
+                        width: 100%;
+                        border-right: none;
+                        border-bottom: 1px solid $border-color;
+
+                        &:last-child {
+                            border-bottom: none;
+
+                            .top {
+                                border-radius: 0 0 $radius $radius;
+
+                                @media screen and (max-width:750px) {
+                                    border-radius: 0;
+                                }
+                            }
+                        }
+
+                        &:first-child .top {
+                            border-radius: 8px 8px 0 0;
+                        }
+
+                        // .top {
+                        //     border-radius: $radius $radius 0 0;
+                        // }
+                    }
+                }
+            }
+        }
+
+        .propertyCard {
+            .propertyDetailWrapper {
+                margin: 1% 0;
+
+                h2 {
+                    font-weight: 600;
+                    font-size: 25px;
+                    line-height: 42.01px;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    margin-bottom: 1rem;
+                    font-family: 'Poppins', sans-serif;
+
+                    @media screen and (max-width:750px) {
+                        font-size: 22px;
+                    }
+                }
+
+                .detailValue {
+                    margin-bottom: 1.5rem;
+
+                    .label {
+                        color: #131E29;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        line-height: 24px;
+                        vertical-align: middle;
+                        font-family: 'Poppins', sans-serif;
+                    }
+
+                    .value {
+                        font-weight: 400;
+                        font-size: 14px;
+                        line-height: 24px;
+                        letter-spacing: 0%;
+                        vertical-align: middle;
+                        font-family: 'Poppins', sans-serif;
+
+                    }
+                }
+            }
+
+            .mortgageCalculator {
+                margin: 2% 0;
+
+                h2 {
+                    font-weight: 600;
+                    font-size: 25px;
+                    line-height: 42.01px;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    margin-bottom: 1rem;
+                    font-family: 'Poppins', sans-serif;
+
+                    @media screen and (max-width:750px) {
+                        font-size: 22px;
+                    }
+                }
+
+                .calculatorValues {
+                    display: flex;
+                    width: 100%;
+                    border: 1px solid $border-color;
+                    border-radius: 8px 8px 0 0;
+                    padding: 1rem;
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 24px;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    font-family: 'Poppins', sans-serif;
+
+                    .inputSection {
+                        margin: 0.5rem 0 1rem 0;
+
+                        input {
+                            width: 100%;
+                            border-radius: 8px;
+                            padding: 0.6rem 0.5rem;
+                            font-family: 'Poppins', sans-serif;
+                        }
+
+                        .ant-input-affix-wrapper {
+                            padding: 0;
+                            border-radius: 8px;
+
+                            .ant-input-prefix {
+                                background: #155E75;
+                                color: white;
+                                width: 10%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                padding: 0 1.5rem;
+                                border-radius: 8px 0 0 8px;
+                            }
+
+                            .ant-input-suffix {
+                                background: #155E75;
+                                color: white;
+                                width: 10%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                padding: 0 2rem;
+                                border-radius: 0 8px 8px 0;
+                            }
+                        }
+
+                        label {
+                            font-family: 'Poppins', sans-serif;
+                        }
+                    }
+                }
+
+                .monthlyValues {
+                    border: 1px solid $border-color;
+                    border-radius: 0 0 8px 8px;
+                    border-top: none;
+                    padding: 1rem 1rem 0 1rem;
+
+                    h5 {
+                        color: #131E29;
+                        font-weight: 600;
+                        font-size: 16px;
+                        line-height: 24px;
+                        letter-spacing: 0%;
+                        vertical-align: middle;
+                        margin-bottom: 1.5rem;
+                        font-family: 'Poppins', sans-serif;
+
+                        @media screen and (max-width:750px) {
+                            font-size: 14px;
+                        }
+                    }
+
+                    .valueColumn {
+                        &:last-child {
+                            .valueWrapper {
+                                border-right: none !important;
+                            }
+                        }
+
+                        .valueWrapper {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            border-right: 1px solid $border-color;
+                            padding-bottom: 1.5rem;
+
+                            @media screen and (max-width:750px) {
+                                border-right: none;
+                            }
+
+                            .top {
+                                font-weight: 600;
+                                font-size: 14px;
+                                line-height: 18.2px;
+                                letter-spacing: 0%;
+                                text-align: center;
+                                vertical-align: middle;
+                                color: $primary-color;
+                                font-family: 'Poppins', sans-serif;
+                            }
+
+                            .bottom {
+                                font-weight: 700;
+                                font-size: 20px;
+                                line-height: 26px;
+                                letter-spacing: 0%;
+                                text-align: center;
+                                vertical-align: middle;
+                                color: #57068C;
+                                font-family: 'Poppins', sans-serif;
+                            }
+                        }
+                    }
+                }
+
+                .valueGraph {
+                    display: flex;
+                    width: 100%;
+                    border: 1px solid $border-color;
+                    border-radius: $radius;
+                    padding: 1rem;
+                    margin-left: 5%;
+
+                    @media screen and (max-width:750px) {
+                        margin-left: 0;
+                        margin-top: 1rem;
+                    }
+                }
+            }
+
+            .cashFlowSection {
+                margin: 4% 0;
+                border: 1px solid $border-color;
+                border-radius: 8px;
+                padding: 1rem;
+
+                .ant-tabs {
+                    .ant-tabs-nav {
+                        .ant-tabs-tab-btn {
+                            font-weight: 500;
+                            font-size: 16px;
+                            line-height: 145%;
+                            letter-spacing: -0.5%;
+
+                            &:hover {
+                                color: $primary-color;
+                            }
+                        }
+
+                        .ant-tabs-tab-active {
+                            .ant-tabs-tab-btn {
+                                color: $primary-color;
+                            }
+                        }
+                    }
+
+                    .ant-tabs-ink-bar {
+                        background: $primary-color;
+                    }
+
+                    .ant-tabs-tabpane {
+                        .cashFLowRow {
+                            .left {
+                                h5 {
+                                    color: #636363;
+                                    font-weight: 500;
+                                    font-size: 15px;
+                                    line-height: 24px;
+                                    letter-spacing: 0%;
+                                    vertical-align: middle;
+                                    font-family: 'Poppins', sans-serif;
+
+                                }
+
+                                .body {
+                                    padding: 0.5rem 1rem;
+
+                                    .flex {
+                                        justify-content: space-between;
+                                        margin: 0.12rem 0;
+
+                                        label {
+                                            color: #636363;
+                                            font-family: 'Poppins', sans-serif;
+                                        }
+
+                                        span {
+                                            color: #636363;
+                                            font-family: 'Poppins', sans-serif;
+                                        }
+                                    }
+
+                                }
+                            }
+
+                            .right {
+                                h5 {
+                                    color: #636363;
+                                    font-weight: 500;
+                                    font-size: 15px;
+                                    line-height: 24px;
+                                    letter-spacing: 0%;
+                                    vertical-align: middle;
+                                }
+
+                                .body {
+                                    padding: 0.5rem 1rem;
+
+                                    .flex {
+                                        justify-content: space-between;
+                                        margin: 0.12rem 0;
+
+                                        label {
+                                            color: #636363;
+                                            font-family: 'Poppins', sans-serif;
+                                        }
+
+                                        span {
+                                            color: #636363;
+                                            font-family: 'Poppins', sans-serif;
+                                        }
+                                    }
+
+                                    .total {
+                                        justify-content: space-between;
+                                        margin: 0.3rem 0;
+                                        display: flex;
+
+                                        label {
+                                            color: #636363;
+                                            font-family: 'Poppins', sans-serif;
+                                            font-weight: 600;
+                                        }
+
+                                        span {
+                                            color: #636363;
+                                            font-weight: 600;
+                                            font-family: 'Poppins', sans-serif;
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+                        .bigChart {
+                            width: 100%;
+                        }
+
+                    }
+                }
+            }
+
+            .moreProperties {
+                .headingSection {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    h2 {
+                        font-weight: 600;
+                        font-size: 30px;
+                        line-height: 42.01px;
+                        letter-spacing: 0%;
+                        vertical-align: middle;
+                        margin-bottom: 0.5rem;
+                        font-family: 'Poppins', sans-serif;
+
+                        @media screen and (max-width:750px) {
+                            font-size: 24px;
+                        }
+                    }
+
+                    span {
+                        color: #131E29CC;
+                        font-weight: 400;
+                        font-size: 16px;
+                        line-height: 24px;
+                        letter-spacing: 0%;
+                        vertical-align: middle;
+                        font-family: 'Poppins', sans-serif;
+
+                        @media screen and (max-width:750px) {
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                .slider-header {
+                    @media screen and (max-width:750px) {
+                        display: flex;
+                        justify-content: flex-end;
+                    }
+
+                    button {
+                        padding: 0.8rem;
+                        border: 1px solid #cecece;
+                        border-radius: 50%;
+                        margin: 0 0.2rem;
+                        cursor: pointer;
+                        font-family: 'Poppins', sans-serif;
+
+                        @media screen and (max-width:750px) {
+                            padding: 0.5rem;
+                        }
+
+                        &:hover {
+                            background: #f0f0f0;
+                        }
+
+                        svg {
+                            font-size: 0.8rem;
+
+                            @media screen and (max-width:750px) {
+                                font-size: 0.5rem;
+                            }
+                        }
+                    }
+                }
+
+                .carousalSection {
+                    padding: 1rem 0 2.5rem 0;
+
+                    .slider-container {
+                        width: 100%;
+                        max-width: 100%;
+                        overflow: hidden;
+                        position: relative;
+
+                        .slider-wrapper {
+                            overflow: hidden;
+                            position: relative;
+                            width: 100%;
+                            padding-bottom: 1rem;
+
+                            .slider-track {
+                                display: flex;
+                                transition: transform 0.4s ease-in-out;
+                                width: fit-content;
+                            }
+
+                            .slider-card {
+                                flex: 0 0 calc(100% / 4.5);
+                                box-sizing: border-box;
+                                border-radius: 8px;
+                                margin-right: 10px;
+                                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                                transition: 0.2s all ease-in-out;
+                                font-family: 'Poppins', sans-serif;
+
+                                &:hover {
+                                    transform: scale(1.01);
+                                }
+
+                                .ant-card-body {
+                                    padding: 0;
+
+                                    .imgsection {
+                                        border-radius: 8px 8px 0 0;
+
+                                        .ant-image {
+                                            border-radius: 8px 8px 0 0;
+
+                                            img {
+                                                border-radius: 8px 8px 0 0;
+                                            }
+                                        }
+
+                                        .tagWrapper {
+                                            position: absolute;
+                                            top: 10px;
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            width: 100%;
+                                            padding: 0 1rem;
+
+                                            .tags {
+                                                background: #FFEAD5;
+                                                border-radius: 25px;
+                                                color: #986636;
+                                                padding: 0.3rem 1rem;
+                                                font-weight: 500;
+                                                text-transform: uppercase;
+                                                font-family: 'Poppins', sans-serif;
+                                            }
+
+                                            .like {
+                                                svg {
+                                                    font-size: 1.3rem;
+                                                    color: white;
+                                                    cursor: pointer;
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                    .infoSection {
+                                        padding: 0.5rem 1rem 1rem 1rem;
+
+                                        h3 {
+                                            margin: 0;
+                                            font-weight: 600;
+                                            font-size: 20px;
+                                            line-height: 24px;
+                                            letter-spacing: 0%;
+                                            vertical-align: middle;
+                                            color: $primary-color;
+                                            margin-bottom: 0.5rem;
+                                            font-family: 'Poppins', sans-serif;
+
+                                            @media screen and (max-width:750px) {
+                                                font-size: 15px;
+                                            }
+                                        }
+
+                                        .address {
+                                            display: flex;
+                                            align-items: center;
+                                            font-size: 0.8rem;
+                                            font-weight: 400;
+                                            line-height: 28px;
+                                            font-family: 'Poppins', sans-serif;
+
+                                            svg {
+                                                color: $primary-color;
+                                                margin-right: 0.5rem;
+                                            }
+                                        }
+
+                                        .cardBedRoomWrapper {
+                                            .bathroomWrapper {
+                                                display: flex;
+                                                align-items: center;
+                                                font-size: 0.8rem;
+                                                font-weight: 400;
+                                                line-height: 28px;
+
+                                                svg {
+                                                    color: $primary-color;
+                                                    margin-right: 0.5rem;
+                                                }
+                                            }
+
+                                            .right {
+                                                display: flex;
+                                                justify-content: flex-end;
+                                            }
+                                        }
+
+                                        .squareWrapper {
+                                            display: flex;
+                                            align-items: center;
+                                            font-size: 0.8rem;
+                                            font-weight: 400;
+                                            line-height: 28px;
+
+                                            svg {
+                                                color: $primary-color;
+                                                margin-right: 0.5rem;
+                                            }
+                                        }
+
+                                        .viewDetailWrapper {
+                                            margin-top: 0.5rem;
+
+                                            .right {
+                                                display: flex;
+                                                justify-content: flex-end;
+
+                                                .buttonsection {
+                                                    display: flex;
+                                                    align-items: center;
+                                                    height: 100%;
+
+                                                    button {
+                                                        background: $primary-color;
+                                                        color: white;
+                                                        font-size: 0.8rem;
+                                                        font-family: 'Poppins', sans-serif;
+                                                    }
+                                                }
+                                            }
+
+                                            .price {
+                                                color: #131E29CC;
+
+                                                p {
+                                                    color: $primary-color;
+                                                    font-weight: 600;
+                                                    font-size: 18px;
+                                                    line-height: 24px;
+                                                    letter-spacing: 0%;
+                                                    vertical-align: middle;
+                                                    font-family: 'Poppins', sans-serif;
+
+                                                    @media screen and (max-width:750px) {
+                                                        font-size: 15px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.ant-drawer {
+    .ant-drawer-content-wrapper {
+        margin-top: 15%;
+    }
+}

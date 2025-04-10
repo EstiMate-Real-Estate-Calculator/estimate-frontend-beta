@@ -115,12 +115,12 @@ const PropertiesList = () => {
           <p className='py-2 pl-2'>Export</p>
         </button>
       </div>
-      <div className='no-scrollbar px-auto mx-auto flex h-full flex-row flex-wrap justify-start gap-5 overflow-y-scroll pb-[170px]'>
+      <div className='no-scrollbar px-auto mx-auto flex h-full flex-row flex-wrap justify-start gap-5 pb-[170px] overflow-auto'>
         {properties.length > 0 ? (
           properties.map((property) => (
-            <PropertyCard 
-              key={property.propertyId} 
-              property={property} 
+            <PropertyCard
+              key={property.propertyId}
+              property={property}
               onDelete={() => handleDeleteProperty(property.propertyId)}
             />
           ))
