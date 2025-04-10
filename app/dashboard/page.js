@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import PropertiesView from "@components/PropertyView";
-import SignOutButton from "@components/SplashSignOutButton";
 import AlertBubble from "@components/AlertBubble";
-import SideBar from "@components/SideBar"; // Import the Sidebar component
+import Header from "../../components/Header/Header.jsx";
+import Footer from "../../components/Footer/Footer.jsx";
+import "../../styles/Listings.scss";
 
 export default function Page() {
   const [activeView, setActiveView] = useState("properties");
-  const [errorDetails, setErrorDetails] = useState(null); // full raw error
+  const [errorDetails, setErrorDetails] = useState(null);
   const [properties, setProperties] = useState([]);
   const [error, setError] = useState(null);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -32,91 +32,88 @@ export default function Page() {
     try {
       const res = await fetch("/api/reports", {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
       if (!res.ok) {
-        const statusText = res.statusText;
-        const status = res.status;
-        let bodyText = "";
-
-        try {
-          bodyText = await res.text(); // attempt to get raw body even if not JSON
-        } catch (bodyErr) {
-          bodyText = "Unable to read response body";
-        }
-
-        const fullError = `Request failed!
-                          Status: ${status} ${statusText}
-                          Body:
-                          ${bodyText}`;
-
-        throw new Error(fullError);
+        const bodyText = await res.text();
+        throw new Error(`Status: ${res.status} ${res.statusText}\nBody:\n${bodyText}`);
       }
 
       const data = await res.json();
-      // Handle both { properties: [...] } and [...] structures
-      const reportsArray = Array.isArray(data) ? data : (data?.properties || []);
+      const reportsArray = Array.isArray(data) ? data : data?.properties || [];
       setProperties(reportsArray);
     } catch (err) {
       const fullError = err.stack || err.message || JSON.stringify(err);
       console.error("Full fetch error:", fullError);
-      setError('Click to view error details');
+      setError("Click to view error details");
       setErrorDetails(fullError);
-      
-      setIsAlertVisible(true);
     }
   };
 
-  // Change the view
   const handleViewChange = (viewName) => {
     setActiveView(viewName);
   };
 
   return (
-    <div className="flex h-full w-full flex-row bg-[#E7E5E5]">
-      {isAlertVisible && (
-        <AlertBubble message={error} onClose={() => setIsAlertVisible(false)}
-        onClick={() => {
-          setIsAlertVisible(false);       // optional: hide after navigating
-          setActiveView('errors');        // navigate to error tab
-        }} />
-      )}
+    <>
+      <div className="h-screen w-screen flex flex-col listingWrapper">
+        {/* Top Header */}
+        <Header />
+        {/* Alert Bubble */}
+        {isAlertVisible && (
+          <AlertBubble
+            message={error}
+            onClose={() => setIsAlertVisible(false)}
+            onClick={() => {
+              setIsAlertVisible(false);
+              setActiveView("errors");
+            }}
+          />
+        )}
 
-      {/* Sidebar Component */}
-      <SideBar />
+        {/* Main Content Section */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar */}
+          {/* <SideBar /> */}
 
-      <div className="flex h-full w-full flex-col">
-        <div className="relative flex h-[70px] w-full flex-row items-center justify-end bg-[#155E75] pr-24">
-          <SignOutButton />
-          <button
-            onClick={() => handleViewChange("account")}
-            className="absolute right-8 flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#FAFAFA] p-1"
-          >
-            <Image
-              height={28}
-              width={28}
-              src="/icons/account.svg"
-              alt="Account Icon"
-            />
-          </button>
+          {/* Main Content Area */}
+          <div className="flex flex-col w-full bg-[#E7E5E5] main">
+            {/* Top Bar with Sign Out + Account Icon */}
+            {/* <div className="flex items-center justify-end h-[70px] bg-[#155E75] px-6">
+            <SignOutButton />
+            <button
+              onClick={() => handleViewChange("account")}
+              className="ml-4 flex h-[48px] w-[48px] items-center justify-center rounded-full bg-[#FAFAFA] p-1"
+            >
+              <Image
+                height={28}
+                width={28}
+                src="/icons/account.svg"
+                alt="Account Icon"
+              />
+            </button>
+          </div> */}
+
+            {/* Page View Content */}
+            <div className="flex-1 p-5">
+              {activeView === "properties" && <PropertiesView properties={properties} />}
+              {activeView === "data" && <DataView />}
+              {activeView === "quick-start" && <QuickStartView />}
+              {activeView === "documents" && <DocumentsView />}
+              {activeView === "account" && <AccountView />}
+              {activeView === "errors" && <ErrorView details={errorDetails} />}
+            </div>
+          </div>
         </div>
-        <div className="h-full w-full overflow-hidden p-5">
-          {activeView === "properties" && (
-            <PropertiesView properties={properties} />
-          )}
-          {activeView === "data" && <DataView />}
-          {activeView === "quick-start" && <QuickStartView />}
-          {activeView === "documents" && <DocumentsView />}
-          {activeView === "account" && <AccountView />}
-          {activeView === 'errors' && <ErrorView details={errorDetails} />}
-        </div>
+        <Footer />
       </div>
-    </div>
+
+    </>
   );
 }
+
+// View Components
 const ErrorView = ({ details }) => (
   <div className="p-4 bg-white rounded shadow border text-left">
     <h2 className="text-lg font-semibold text-red-600 mb-2">Error Details</h2>
@@ -125,6 +122,7 @@ const ErrorView = ({ details }) => (
     </pre>
   </div>
 );
+
 const DataView = () => <div>Data View</div>;
 const QuickStartView = () => <div>Quick Start View</div>;
 const DocumentsView = () => <div>Documents View</div>;

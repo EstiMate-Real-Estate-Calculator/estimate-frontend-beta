@@ -78,46 +78,49 @@ body {
 
             .propertyInfoRow {
                 .propertyDetailColumn {
-                    h2 {
-                        color: $primary-color;
-                        font-weight: 600;
-                        font-size: 30px;
-                        font-family: 'Poppins', sans-serif;
+                    .propertyHeader {
+                        margin-top: 1.5%;
 
-                        @media screen and (max-width:750px) {
-                            font-size: 24px;
+                        .locationWrapper {
+                            display: flex;
+                            align-items: center;
+                            font-size: 1rem;
+                            font-weight: 400;
+                            line-height: 28px;
+
+                            svg {
+                                color: $primary-color;
+                                margin-right: 0.5rem;
+                            }
                         }
 
-                    }
+                        .tagWrapper {
+                            display: flex;
+                            align-items: center;
+                            margin-top: 0.6rem;
 
-                    .locationWrapper {
-                        display: flex;
-                        align-items: center;
-                        font-size: 1rem;
-                        font-weight: 400;
-                        line-height: 28px;
-
-                        svg {
-                            color: $primary-color;
-                            margin-right: 0.5rem;
+                            .tag {
+                                background: $primary-color;
+                                color: white;
+                                margin-right: 0.5rem;
+                                border-radius: 12px;
+                                font-size: 0.75rem;
+                                padding: 0.26% 1.2%;
+                                font-family: 'Poppins', sans-serif;
+                            }
                         }
                     }
 
-                    .tagWrapper {
-                        display: flex;
-                        align-items: center;
-                        margin-top: 0.6rem;
+                    // h2 {
+                    //     color: $primary-color;
+                    //     font-weight: 600;
+                    //     font-size: 30px;
+                    //     font-family: 'Poppins', sans-serif;
 
-                        .tag {
-                            background: $primary-color;
-                            color: white;
-                            margin-right: 0.5rem;
-                            border-radius: 12px;
-                            font-size: 0.75rem;
-                            padding: 0.26% 1.2%;
-                            font-family: 'Poppins', sans-serif;
-                        }
-                    }
+                    //     @media screen and (max-width:750px) {
+                    //         font-size: 24px;
+                    //     }
+                    // }
                 }
 
                 .priceColumn {
@@ -183,12 +186,61 @@ body {
 
                     img {
                         border-radius: 10px;
-                        max-height: 64vh;
+                        max-height: 51vh;
                         height: 100%;
                     }
                 }
             }
 
+            .rightSection {
+                margin: 8.5% 0 2% 2%;
+
+                .afterValue,
+                .valueGraph {
+                    width: 100%;
+                    border: 1px solid $border-color;
+                    border-radius: $radius;
+                    margin-top: 1rem;
+
+                    .top {
+                        background: $primary-color;
+                        color: white;
+                        text-align: center;
+                        padding: 1.2rem 1rem;
+                        font-weight: 600;
+                        font-size: 16px;
+                        border-radius: $radius $radius 0 0;
+                        text-transform: uppercase;
+                        font-family: 'Poppins', sans-serif;
+                    }
+
+                    .bottom {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 2rem 1rem;
+                        font-weight: 400;
+                        font-size: 26px;
+                        font-family: 'Poppins', sans-serif;
+
+                        .grey {
+                            color: #5C5C5C;
+                        }
+
+                        svg {
+                            font-size: 24px;
+                        }
+                    }
+                }
+
+                .valueGraph .bottom {
+                    padding: 0;
+                    overflow: hidden;
+                }
+            }
+        }
+
+        .widgetContainer {
             .widgetWrapper {
                 display: flex;
                 flex-wrap: wrap;
@@ -265,54 +317,6 @@ body {
                         //     border-radius: $radius $radius 0 0;
                         // }
                     }
-                }
-            }
-
-
-            .rightSection {
-                margin: 8.5% 0 2% 2%;
-
-                .afterValue,
-                .valueGraph {
-                    width: 100%;
-                    border: 1px solid $border-color;
-                    border-radius: $radius;
-                    margin-top: 1rem;
-
-                    .top {
-                        background: $primary-color;
-                        color: white;
-                        text-align: center;
-                        padding: 1.2rem 1rem;
-                        font-weight: 600;
-                        font-size: 16px;
-                        border-radius: $radius $radius 0 0;
-                        text-transform: uppercase;
-                        font-family: 'Poppins', sans-serif;
-                    }
-
-                    .bottom {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 2rem 1rem;
-                        font-weight: 400;
-                        font-size: 26px;
-                        font-family: 'Poppins', sans-serif;
-
-                        .grey {
-                            color: #5C5C5C;
-                        }
-
-                        svg {
-                            font-size: 24px;
-                        }
-                    }
-                }
-
-                .valueGraph .bottom {
-                    padding: 0;
-                    overflow: hidden;
                 }
             }
         }
@@ -893,12 +897,6 @@ body {
             }
         }
 
-    }
-
-    .customFooter {
-        text-align: center;
-        background: $primary-color;
-        color: white;
     }
 }
 

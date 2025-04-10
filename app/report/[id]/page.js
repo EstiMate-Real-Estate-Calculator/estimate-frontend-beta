@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-// import ReportHighlight from '@components/ReportHighlight';
 import Formatter from '@lib/formatterClass';
-// import { LineChart, DonutChart } from '@lib/chart';
-// import Chart from 'chart.js/auto'; // Ensure Chart.js is imported
 import { Layout, Row, Col, Image, Input, Tabs, Card, Button, Drawer } from "antd";
 import { FaBath } from "react-icons/fa";
 import { LuClipboardList } from "react-icons/lu";
@@ -13,7 +10,6 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { FaLocationDot } from "react-icons/fa6";
 import { CiHeart } from "react-icons/ci";
 import { AiFillHome } from "react-icons/ai";
-import { IoMdArrowForward } from "react-icons/io";
 import "../../../styles/globalStyle.scss";
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -21,10 +17,9 @@ import { FaBed } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import dayjs from 'dayjs';
-import { MenuOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
+import Header from "../../../components/Header/Header";
 
-const { Header, Footer, Content } = Layout;
+const { Footer, Content } = Layout;
 
 // Simple component for displaying detail items
 const DetailItem = ({ label, value }) => (
@@ -38,10 +33,8 @@ const Page = () => {
   const { id } = useParams();
   const [report, setReport] = useState(null);
   const [schedule, setSchedule] = useState([]);
-  const [chartInstance, setChartInstance] = useState(null);
-  const [error, setError] = useState(null); // <-- Add state for error messages
-  const [isLoading, setIsLoading] = useState(true); // <-- Add loading state
-  const isLoggedIn = false;
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [monthlyPayment, setMonthlyPayment] = useState({
     mortgage: 0,
     taxes: 0,
@@ -54,8 +47,6 @@ const Page = () => {
     loanTerm: 30,
   });
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     if (id) {
@@ -209,6 +200,7 @@ const Page = () => {
 
     return schedule;
   }
+  console.info("REPORT", report);
 
   // Helper function for formatting expenses
   const formatExpenses = (report) => {
@@ -404,7 +396,7 @@ const Page = () => {
   // --- End Conditional Rendering ---
 
   const mortgage = report.all_total_loan_payment?.[0];
-  const monthlyMortgage = mortgage ? (mortgage / 12).toFixed(2) : null;
+  // const monthlyMortgage = mortgage ? (mortgage / 12).toFixed(2) : null;
   const taxes = report.all_property_tax?.[0];
   const insurance = report.all_insurance || 'NA';
   const rent = report.all_RM?.[0];
@@ -417,12 +409,12 @@ const Page = () => {
     report.all_capex?.[0] || 0,
     report.all_utilities?.[0] || 0
   ];
-  const othersTotal = -otherExpenses.reduce((sum, val) => sum + val, 0);
-  const arv = Math.round(report.all_ending_balance[report.all_ending_balance.length - 2]);
+  // const othersTotal = -otherExpenses.reduce((sum, val) => sum + val, 0);
+  // const arv = Math.round(report.all_ending_balance[report.all_ending_balance.length - 2]);
   const allBalances = report.all_ending_balance || [];
   const valueOverTime = allBalances.slice(-6, -1);
   const totalYears = allBalances.length;
-  // const years = Array.from({ length: valueOverTime.length }, (_, i) => `Year ${totalYears - 5 + i}`);
+  const years = Array.from({ length: valueOverTime.length }, (_, i) => `Year ${totalYears - 5 + i}`);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -482,7 +474,7 @@ const Page = () => {
   const options = {
     chart: {
       type: 'area',
-      height: 364,
+      height: 310,
     },
     title: {
       text: null
@@ -490,16 +482,16 @@ const Page = () => {
     xAxis: {
       visible: false,
     },
-    // xAxis: {
-    //   categories: years,
-    //   labels: {
-    //     style: {
-    //       fontSize: '12px'
-    //     }
-    //   },
-    //   lineColor: '#ccc',
-    //   tickColor: '#ccc'
-    // },
+    xAxis: {
+      categories: years,
+      labels: {
+        style: {
+          fontSize: '12px'
+        }
+      },
+      lineColor: '#ccc',
+      tickColor: '#ccc'
+    },
     yAxis: {
       labels: {
         formatter: function () {
@@ -1109,72 +1101,7 @@ const Page = () => {
   return (
     <div className="detailWrapper">
       <Layout>
-        <Header className="customHeader flex justify-between items-center px-6 py-4 bg-white shadow relative">
-          <div className="text-xl font-bold text-white-600 logoSection" onClick={() => router.push('/dashboard')}>
-            EstiMate
-          </div>
-          {/* Navigation menu */}
-          <nav className="hidden md:flex space-x-12 text-base font-medium text-white-700">
-            <a href="#home" className="hover:text-primary">Home</a>
-            <a href="#listing" className="hover:text-primary">Listing</a>
-            <a href="#features" className="hover:text-primary">Features</a>
-            <a href="#extension" className="hover:text-primary">Extension</a>
-            <a href="#contact" className="hover:text-primary">Contact Us</a>
-          </nav>
-
-          {/* To show Profile if logged in and login/signup if unauthenticated */}
-          <div className="hidden md:block">
-            {isLoggedIn ? (
-              <img
-                src="/profile-icon.png"
-                alt="Profile"
-                className="w-8 h-8 rounded-full cursor-pointer"
-              />
-            ) : (
-              <button className="text-white px-4 py-1 customLoginButton">
-                Login <span>Sign In</span>
-              </button>
-            )}
-          </div>
-
-          {/* Button to open the drawer  */}
-          <Button
-            className="md:hidden text-gray-700 menuButton"
-            icon={<MenuOutlined />}
-            onClick={() => setDrawerVisible(true)}
-            type="text"
-          />
-
-          {/* This is a drawer for Mobile view of the Header*/}
-          <Drawer
-            title="Menu"
-            placement="right"
-            onClose={() => setDrawerVisible(false)}
-            visible={drawerVisible}
-          >
-            <nav className="flex flex-col space-y-4 text-base font-medium">
-              <a href="#home" onClick={() => setDrawerVisible(false)}>Home</a>
-              <a href="#listing" onClick={() => setDrawerVisible(false)}>Listing</a>
-              <a href="#features" onClick={() => setDrawerVisible(false)}>Features</a>
-              <a href="#extension" onClick={() => setDrawerVisible(false)}>Extension</a>
-              <a href="#contact" onClick={() => setDrawerVisible(false)}>Contact Us</a>
-
-              <div className="mt-6">
-                {isLoggedIn ? (
-                  <img
-                    src="/profile-icon.png"
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full cursor-pointer"
-                  />
-                ) : (
-                  <button className="customLoginButton">
-                    Login <span>Sign In</span>
-                  </button>
-                )}
-              </div>
-            </nav>
-          </Drawer>
-        </Header>
+        <Header />
 
         <Content className="customBodyWrapper">
           <div className="topSection">
@@ -1184,8 +1111,8 @@ const Page = () => {
 
             <Row gutter={16} className="propertyInfoRow">
               <Col md={18} xs={24} className="propertyDetailColumn">
-                <div>
-                  <h2>Conscient Elaira Residences</h2>
+                <div className='propertyHeader'>
+                  {/* <h2>Conscient Elaira Residences</h2> */}
                   <span className="locationWrapper"><FaLocationDot />{createFullAddress(report)}</span>
                   <div className="tagWrapper">
                     {tags.map((tag, index) => (
@@ -1217,6 +1144,28 @@ const Page = () => {
                 <div className="bannerImage">
                   <Image src={report?.image} alt="Not Found" className="img-fluid" preview={false} />
                 </div>
+              </Col>
+              <Col md={6} xs={24}>
+                <div className="rightSection">
+                  {/* <div className="afterValue">
+                    <div className="top">After Repair Value</div>
+                    <div className="bottom"><span className="grey">{Formatter.formatUSD(projections.acquisitionCosts)}</span><IoMdArrowForward /> {Formatter.formatUSD(arv)}</div>
+                  </div> */}
+                  <div className="valueGraph">
+                    <div className="top">Value</div>
+                    <div className="bottom">
+                      <div style={{ borderRadius: '0 0 8px 8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', width: '100%' }}>
+                        <HighchartsReact highcharts={Highcharts} options={options} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+          <div className='widgetContainer'>
+            <Row gutter={16}>
+              <Col md={24} xs={24}>
                 <div className="widgetWrapper">
                   {widgets?.map((item) => (
                     <div className="widgets">
@@ -1228,27 +1177,9 @@ const Page = () => {
                       </div>
                     </div>
                   ))}
-                </div>
-              </Col>
-              <Col md={6} xs={24}>
-                <div className="rightSection">
-                  <div className="afterValue">
-                    <div className="top">After Repair Value</div>
-                    <div className="bottom"><span className="grey">{Formatter.formatUSD(projections.acquisitionCosts)}</span><IoMdArrowForward /> {Formatter.formatUSD(arv)}</div>
-                  </div>
-                  <div className="valueGraph">
-                    <div className="top">Value</div>
-                    <div className="bottom">
-                      <div style={{ borderRadius: '0 0 8px 8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                        <HighchartsReact highcharts={Highcharts} options={options} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Col>
+                </div></Col>
             </Row>
           </div>
-
           <Card className='mt-4 propertyCard'>
             <div className="propertyDetailWrapper">
               <h2>Property Details</h2>
