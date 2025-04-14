@@ -1,0 +1,77 @@
+$primary-color: #155E75;
+
+.mainPropertyCard {
+    border: 1px solid #fff;
+    transition: 0.2s all ease-in-out;
+    &:hover {
+        border: 1px solid $primary-color;
+    }
+    .cardDetails {
+        p {
+            svg {
+                color: $primary-color;
+                margin-right: 0.2rem;
+            }
+        }
+
+        .bathroomWrapper {
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .left {
+                display: flex;
+
+                svg {
+                    color: #155E75;
+                    margin-right: 0.5rem;
+                    font-size: 1.3rem;
+                }
+            }
+
+            .right {
+                svg {
+                    color: $primary-color;
+                    margin-right: 0.5rem;
+                    font-size: 1.3rem;
+                }
+            }
+        }
+    }
+
+
+    .bottomRow {
+        margin-top: 0.5rem;
+
+        .text-lg {
+            color: #155E75;
+        }
+
+        .detailWrapper {
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+
+            a {
+                width: fit-content !important;
+                padding: 0.4rem 1.5rem;
+                background: #155E75;
+                color: white;
+                border-radius: 12px;
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 18px;
+                letter-spacing: 0%;
+                vertical-align: middle;
+
+            }
+        }
+    }
+
+    .widgetsSection {
+        .widget {
+            padding: 0.2rem 1.5rem;
+            background-color: rgba(21, 94, 117, 0.8);
+        }
+    }
+}

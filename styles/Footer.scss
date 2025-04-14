@@ -1,12 +1,132 @@
-$primary-color: #155E75;
-$light-bg: #f0f2f5;
-$tag-bg: #FFEAD5;
-$tag-color: #986636;
-$border-color: #DCD4E2;
-$radius: 8px;
-
-.customFooter {
-    text-align: center;
-    background: $primary-color;
+.estimate-footer {
+    background-color: #2a6278;
     color: white;
+    padding: 40px 0 15px;
+    width: 100%;
+    margin-top: 60px;
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-logo {
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    h5.ant-typography {
+        color: #8dcbe6;
+        margin-bottom: 16px;
+        font-size: 16px;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: white;
+            font-size: 14px;
+
+            &:hover {
+                color: #8dcbe6;
+            }
+        }
+    }
+
+    .social-icons {
+        margin-top: 10px;
+
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            .anticon {
+                font-size: 16px;
+            }
+        }
+    }
+
+    .footer-divider {
+        background-color: rgba(255, 255, 255, 0.1);
+        margin: 20px 0;
+    }
+
+    .footer-bottom {
+        .copyright {
+            margin-bottom: 10px;
+
+            @media (min-width: 768px) {
+                margin-bottom: 0;
+                text-align: left;
+            }
+
+            span {
+                font-size: 13px;
+                color: white;
+            }
+        }
+
+        .legal-links {
+            display: flex;
+            justify-content: flex-start;
+
+            @media (min-width: 768px) {
+                justify-content: flex-end;
+            }
+
+            a {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 13px;
+
+                &:hover {
+                    color: white;
+                }
+            }
+        }
+
+        @media (max-width: 767px) {
+            text-align: center;
+
+            .ant-space {
+                justify-content: center;
+            }
+        }
+    }
+}
+
+.estimate-footer .ant-typography a {
+    color: white;
+
+    &:hover {
+        color: #8dcbe6;
+    }
 }

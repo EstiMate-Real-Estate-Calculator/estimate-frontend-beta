@@ -57,7 +57,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="h-screen w-screen flex flex-col listingWrapper">
+      <div className="h-screen w-100 flex flex-col listingWrapper">
         {/* Top Header */}
         <Header />
         {/* Alert Bubble */}
@@ -106,9 +106,8 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
-
+      <Footer />
     </>
   );
 }

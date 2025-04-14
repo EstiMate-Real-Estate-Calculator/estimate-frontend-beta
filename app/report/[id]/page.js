@@ -201,7 +201,6 @@ const Page = () => {
 
     return schedule;
   }
-  console.info("REPORT", report);
 
   // Helper function for formatting expenses
   const formatExpenses = (report) => {
@@ -444,7 +443,6 @@ const Page = () => {
     }
   ];
 
-  console.info("insurance", insurance)
   const widgets = [
     {
       label: 'Mortgage',

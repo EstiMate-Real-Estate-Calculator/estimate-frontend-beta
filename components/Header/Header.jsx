@@ -4,6 +4,9 @@ import { Layout, Dropdown, Button, Drawer } from "antd";
 import { useRouter } from 'next/navigation';
 import "../../styles/Header.scss";
 import { FaUserCircle } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
+import { LoginOutlined } from '@ant-design/icons';
 
 const { Header } = Layout;
 
@@ -15,12 +18,13 @@ const HeaderComponent = () => {
         localStorage?.clear();
         window.open('/sign-in', '_self');
     }
+
     const items = [
         {
             key: '1',
             label: (
                 <a href="/profile">
-                    Profile
+                    Profile <FaUser color='#155E75' />
                 </a>
             ),
         },
@@ -28,11 +32,15 @@ const HeaderComponent = () => {
             key: '2',
             label: (
                 <span onClick={() => logout()}>
-                    Sign Out
+                    Sign Out <FaSignOutAlt color='#155E75' />
                 </span>
             ),
         },
     ];
+
+    const handleLoginClick = () => {
+        router.push('/sign-in');
+    };
 
     return (
         <>
@@ -58,10 +66,23 @@ const HeaderComponent = () => {
                     <a href="/FAQ" className="hover:text-primary">FAQ</a>
                 </nav>
 
-                {/* To show Profile if logged in and login/signup if unauthenticated */}
-                <Dropdown menu={{ items }} className='headerDropdown hidden md:block' placement="bottomRight">
-                    <FaUserCircle />
-                </Dropdown>
+                {window.location.pathname === "/" ? (
+                 <Button 
+      type="primary"
+      className="loginBtn"
+      onClick={handleLoginClick}
+    >
+      Log In / Sign Up
+    </Button>
+                ) : (
+                    <>
+                        {/* To show Profile if logged in and login/signup if unauthenticated */}
+                        <Dropdown menu={{ items }} className='headerDropdown hidden md:block' placement="bottomRight">
+                            <FaUserCircle />
+                        </Dropdown>
+                    </>
+                )}
+
 
 
                 {/* Button to open the drawer  */}
