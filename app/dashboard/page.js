@@ -73,7 +73,7 @@ export default function Page() {
         )}
 
         {/* Main Content Section */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden overflow-y-auto">
           {/* Sidebar */}
           {/* <SideBar /> */}
 

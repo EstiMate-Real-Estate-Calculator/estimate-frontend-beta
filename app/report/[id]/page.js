@@ -11,6 +11,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { CiHeart } from "react-icons/ci";
 import { AiFillHome } from "react-icons/ai";
 import "../../../styles/globalStyle.scss";
+import "../../../styles/Footer.scss";
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { FaBed } from "react-icons/fa6";
@@ -398,7 +399,7 @@ const Page = () => {
   const mortgage = report.all_total_loan_payment?.[0];
   // const monthlyMortgage = mortgage ? (mortgage / 12).toFixed(2) : null;
   const taxes = report.all_property_tax?.[0];
-  const insurance = report.all_insurance || 'NA';
+  const insurance = report.all_insurance[0] | 'NA';
   const rent = report.all_RM?.[0];
   const managementFeePercent = 0.08;
   const managementFees = rent ? -(rent * managementFeePercent).toFixed(2) : null;
@@ -443,6 +444,7 @@ const Page = () => {
     }
   ];
 
+  console.info("insurance", insurance)
   const widgets = [
     {
       label: 'Mortgage',
@@ -456,7 +458,7 @@ const Page = () => {
     },
     {
       label: 'Insurance',
-      value: insurance,
+      value: Formatter.formatUSD(insurance),
       color: '#57068C'
     },
     {
@@ -1177,7 +1179,8 @@ const Page = () => {
                       </div>
                     </div>
                   ))}
-                </div></Col>
+                </div>
+              </Col>
             </Row>
           </div>
           <Card className='mt-4 propertyCard'>
@@ -1265,73 +1268,76 @@ const Page = () => {
             <div className="cashFlowSection">
               <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
             </div>
+          </Card>
 
-            <div className="moreProperties">
-              <div className="headingSection">
-                <div className="title">
-                  <h2>More In The Area</h2>
-                  <span>Explore more properties in your area</span>
-                </div>
-                <div className="slider-header">
-                  <button onClick={prevCard} disabled={currentIndex === 0}><FaArrowLeft /></button>
-                  <button onClick={nextCard} disabled={currentIndex >= cardsData.length - 4}><FaArrowRight /></button>
-                </div>
+        </Content>
+        <div className='propertyMainWrapper'>
+          <div className="moreProperties">
+            <div className="headingSection">
+              <div className="title">
+                <h2>More In The Area</h2>
+                <span>Explore more properties in your area</span>
               </div>
-              <div className="carousalSection">
-                <div className="slider-container">
-                  <div className="slider-wrapper">
-                    <div
-                      className="slider-track"
-                      style={{ transform: `translateX(-${currentIndex * (100 / 4.5)}%)` }}
-                    >
-                      {cardsData.map((card) => (
-                        <Card className="slider-card" key={card.id}>
-                          <div className="imgsection">
-                            <Image src={card.image} preview={false} alt="Not found" />
-                            <div className="tagWrapper">
-                              <div className="tags">{card.tag}</div>
-                              <div className="like"><FaHeart /></div>
-                            </div>
+              <div className="slider-header">
+                <button onClick={prevCard} disabled={currentIndex === 0}><FaArrowLeft /></button>
+                <button onClick={nextCard} disabled={currentIndex >= cardsData.length - 4}><FaArrowRight /></button>
+              </div>
+            </div>
+            <div className="carousalSection">
+              <div className="slider-container">
+                <div className="slider-wrapper">
+                  <div
+                    className="slider-track"
+                    style={{ transform: `translateX(-${currentIndex * (100 / 4.5)}%)` }}
+                  >
+                    {cardsData.map((card) => (
+                      <Card className="slider-card" key={card.id}>
+                        <div className="imgsection">
+                          <Image src={card.image} preview={false} alt="Not found" />
+                          <div className="tagWrapper">
+                            <div className="tags">{card.tag}</div>
+                            <div className="like"><FaHeart /></div>
                           </div>
-                          <div className="infoSection">
-                            <h3>{card.name}</h3>
-                            <p className="address"><FaLocationDot />{card.address}</p>
-                            <Row gutter={16} className="cardBedRoomWrapper">
-                              <Col md={12} xs={24}>
-                                <div className="bathroomWrapper"><FaBed />  <p>{card.bedrooms}</p></div>
-                              </Col>
-                              <Col md={12} xs={24} className="right">
-                                <div className="squareWrapper"><LuClipboardList />  <p>{card.squareFeet} sqft</p></div>
-                              </Col>
-                            </Row>
-                            <hr />
-                            <Row gutter={16} className="viewDetailWrapper">
-                              <Col xs={24} md={12}>
-                                <div className="price">
-                                  Starting Price
-                                  <br />
-                                  <p>{card.startingPrice}</p>
-                                </div>
-                              </Col>
-                              <Col xs={24} md={12} className="right">
-                                <div className="buttonsection">
-                                  <Button>
-                                    View Details
-                                  </Button>
-                                </div>
-                              </Col>
-                            </Row>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
+                        </div>
+                        <div className="infoSection">
+                          <h3>{card.name}</h3>
+                          <p className="address"><FaLocationDot />{card.address}</p>
+                          <Row gutter={16} className="cardBedRoomWrapper">
+                            <Col md={12} xs={24}>
+                              <div className="bathroomWrapper"><FaBed />  <p>{card.bedrooms}</p></div>
+                            </Col>
+                            <Col md={12} xs={24} className="right">
+                              <div className="squareWrapper"><LuClipboardList />  <p>{card.squareFeet} sqft</p></div>
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row gutter={16} className="viewDetailWrapper">
+                            <Col xs={24} md={12}>
+                              <div className="price">
+                                Starting Price
+                                <br />
+                                <p>{card.startingPrice}</p>
+                              </div>
+                            </Col>
+                            <Col xs={24} md={12} className="right">
+                              <div className="buttonsection">
+                                <Button>
+                                  View Details
+                                </Button>
+                              </div>
+                            </Col>
+                          </Row>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
+          <div className='comingSoon'>Coming Soon</div>
+        </div>
 
-        </Content>
       </Layout>
       <Footer className="customFooter">
         © 2025 EstiMate
