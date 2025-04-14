@@ -2,5 +2,9 @@
     .main {
         padding: 1% 10% !important;
         background: #fff;
+
+        @media screen and (max-width:750px){
+            padding: 1% 5% !important;
+        }
     }
 }

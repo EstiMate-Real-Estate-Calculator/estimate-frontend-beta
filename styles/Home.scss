@@ -1,0 +1,393 @@
+body {
+    overflow-x: hidden;
+}
+
+.homeWrapper {
+    .bannerWrapper {
+        padding: 1% 10% !important;
+        height: 100%;
+        min-height: 85vh;
+
+        .leftSection {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+
+            .text {
+                h1 {
+                    font-weight: 700;
+                    font-size: 4.3rem;
+                    line-height: 100%;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    color: #fff;
+                    margin-bottom: 3%;
+                }
+
+                span {
+                    font-weight: 500;
+                    font-size: 24px;
+                    line-height: 30px;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    color: #FEFEFE;
+                    margin: 2% 0;
+                }
+            }
+
+            .buttonSection {
+                margin-top: 3%;
+
+                .demo {
+                    background: #155E75;
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    line-height: 100%;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    height: 100%;
+                    padding: 0.5rem 1rem;
+                    margin-right: 1rem;
+                }
+
+                .browse {
+                    border: 1px solid #155E75;
+                    background: #FFFFFF;
+                    border-radius: 12px;
+                    color: #155E75;
+                    font-weight: 600;
+                    font-size: 18px;
+                    line-height: 100%;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    height: 100%;
+                    padding: 0.45rem 1rem;
+                }
+            }
+        }
+    }
+
+    .estimateWrapper {
+        padding: 1% 10% !important;
+
+        .title {
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+            color: #155E75;
+            padding: 1rem 0 2.5rem 0;
+        }
+
+        .featuresGrid {
+            .ant-col {
+                margin-bottom: 1.5rem;
+
+                .ant-card {
+                    background-color: #fff;
+                    border-radius: 8px;
+                    padding: 1rem;
+                    text-align: center;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                    transition: transform 0.3s ease;
+                    height: 100%;
+
+                    &:hover {
+                        transform: translateY(-5px);
+                    }
+
+                    .iconWrapper {
+                        width: 60px;
+                        height: 60px;
+                        background-color: #2a94ba;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0 auto 20px;
+
+                        svg {
+                            color: white;
+                            font-size: 24px;
+                        }
+                    }
+
+                    .featureTitle {
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: #2a6278;
+                        margin-bottom: 10px;
+                    }
+
+                    .description {
+                        font-size: 14px;
+                        color: #666;
+                        line-height: 1.5;
+                    }
+                }
+            }
+
+        }
+    }
+
+    .stepsSection {
+        background: #F0F8FF;
+        padding: 1% 0;
+
+        .title {
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+            color: #155E75;
+            padding: 1rem 0 2.5rem 0;
+        }
+
+        .stepsGrid {
+            padding: 0% 10%;
+
+            .card {
+                padding: 30px 20px;
+                text-align: center;
+
+                .iconWrapper {
+                    width: 60px;
+                    height: 60px;
+                    background-color: #2a94ba;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 20px;
+
+                    svg {
+                        color: white;
+                        font-size: 24px;
+                    }
+                }
+
+                .stepTitle {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #2a6278;
+                    margin-bottom: 10px;
+                }
+
+                .description {
+                    font-size: 14px;
+                    color: #666;
+                    line-height: 1.5;
+                }
+            }
+
+        }
+    }
+
+    .featuredPropertiesWrapper {
+        padding: 1% 10% !important;
+
+        .title {
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+            color: #155E75;
+            padding: 1rem 0 2.5rem 0;
+        }
+
+        .comingSoon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(21, 94, 117, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 10;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+    }
+
+    .analyticsWrapper {
+        background: #F0F8FF;
+
+        .analyticsContent {
+            padding: 5% 10% !important;
+
+            .leftWrapper {
+                .ant-image {
+                    img {
+                        border-radius: 12px;
+                    }
+                }
+            }
+
+            .analyticsText {
+                padding: 2rem 4rem 0.5rem 4rem;
+
+                h2 {
+                    font-weight: 600;
+                    font-size: 32px;
+                    line-height: 42.01px;
+                    letter-spacing: 0%;
+                    vertical-align: middle;
+                    color: #155E75;
+                }
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    margin: 0.8rem 0;
+
+                    svg {
+                        color: #155E75;
+                    }
+                }
+            }
+
+            .buttonSection {
+                padding: 1rem 4rem;
+
+                button {
+                    background: #155E75;
+                    color: white;
+                    border-radius: 12px;
+                }
+            }
+        }
+    }
+
+    .reviewWrapper {
+        padding: 1% 10% 5% 10% !important;
+
+        .reviewData {
+            .slick-initialized {
+                .slick-slide {
+                    padding: 0 15px;
+                }
+            }
+
+            .slick-prev {
+                &::before {
+                    color: #155E75;
+                }
+            }
+
+            .slick-next {
+                &::before {
+                    color: #155E75;
+                }
+            }
+
+            .title {
+                font-weight: 600;
+                font-size: 32px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                text-align: center;
+                vertical-align: middle;
+                color: #155E75;
+                padding: 1rem 0 2.5rem 0;
+            }
+
+            .reviewSection {
+                padding: 60px 30px;
+                background: #f5f9fc;
+                text-align: center;
+            }
+
+            .heading {
+                font-size: 28px;
+                font-weight: 600;
+                color: #155e75;
+                margin-bottom: 40px;
+            }
+
+            .card {
+                background: #e8f4fb;
+                border-radius: 12px;
+                padding: 25px 20px;
+                margin: 0 10px;
+                text-align: left;
+                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+                min-height: 220px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .text {
+                font-size: 14px;
+                color: #333;
+                margin-bottom: 20px;
+                line-height: 1.6;
+            }
+
+            .footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .user {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .name {
+                    font-weight: 600;
+                    font-size: 14px;
+                    color: #155e75;
+                }
+
+                .date {
+                    font-size: 12px;
+                    color: #888;
+                }
+            }
+        }
+
+        .comingSoon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(21, 94, 117, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 10;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+    }
+}
+
+.skeleton-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

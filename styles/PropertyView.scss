@@ -1,0 +1,23 @@
+$primary-color: #155E75;
+
+.PropertyViewWrapper {
+    @media screen and (max-width:750px) {
+        overflow: hidden;
+    }
+
+    .filters {
+        @media screen and (max-width:750px) {
+            overflow-x: scroll;
+        }
+    }
+
+    .customExportButton {
+        background: $primary-color;
+        color: white;
+        border-radius: 12px;
+
+        svg {
+            margin-left: 0.3rem;
+        }
+    }
+}
