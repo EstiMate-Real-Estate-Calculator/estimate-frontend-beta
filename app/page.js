@@ -11,9 +11,11 @@ import Featured from "../components/Landing/FeaturedProperties";
 import Analytics from "../components/Landing/Analytics";
 import Reviews from "../components/Landing/Reviews";
 import Footer from "../components/Footer/Footer";
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [loaded, setLoaded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setLoaded(true);
@@ -21,6 +23,10 @@ export default function Page() {
 
   if (!loaded) {
     return <div className="skeleton-layout">Loading...</div>;
+  }
+
+  const browseProperties = () => {
+    router.push('/sign-in');
   }
 
   return (
@@ -40,7 +46,7 @@ export default function Page() {
                 </div>
                 <div className='buttonSection'>
                   <Button className='demo'>View Demo</Button>
-                  <Button className='browse'>Browse properties</Button>
+                  <Button className='browse' onClick={browseProperties}>Browse properties</Button>
                 </div>
               </div>
             </Col>

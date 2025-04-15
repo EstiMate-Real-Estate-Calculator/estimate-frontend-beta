@@ -50,7 +50,7 @@ const HeaderComponent = () => {
                 </div>
                 {/* Navigation menu */}
                 <nav className="hidden md:flex space-x-12 text-base font-medium text-white-700">
-                    <a href="/dashboard" className="hover:text-primary">Home</a>
+                    <a href="/" className="hover:text-primary">Home</a>
                     <a href="/dashboard" className="hover:text-primary">Listing</a>
                     <a href="/dashboard" className="hover:text-primary">Features</a>
                     <a href="https://chromewebstore.google.com/detail/estimate-demo/ibgdanpaoapljanhifdofglnibahljbe?authuser=1&hl=en" className="hover:text-primary" target="_blank"
@@ -67,13 +67,13 @@ const HeaderComponent = () => {
                 </nav>
 
                 {window.location.pathname === "/" ? (
-                 <Button 
-      type="primary"
-      className="loginBtn"
-      onClick={handleLoginClick}
-    >
-      Log In / Sign Up
-    </Button>
+                    <Button
+                        type="primary"
+                        className="loginBtn"
+                        onClick={handleLoginClick}
+                    >
+                        Log In / Sign Up
+                    </Button>
                 ) : (
                     <>
                         {/* To show Profile if logged in and login/signup if unauthenticated */}

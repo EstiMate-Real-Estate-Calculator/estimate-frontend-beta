@@ -19,8 +19,9 @@ import { FaHeart } from "react-icons/fa";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import dayjs from 'dayjs';
 import Header from "../../../components/Header/Header";
+import Footer from "../../../components/Footer/Footer";
 
-const { Footer, Content } = Layout;
+const { Content } = Layout;
 
 // Simple component for displaying detail items
 const DetailItem = ({ label, value }) => (
@@ -1337,9 +1338,7 @@ const Page = () => {
         </div>
 
       </Layout>
-      <Footer className="customFooter">
-        © 2025 EstiMate
-      </Footer>
+<Footer />
     </div>
   );
 };
