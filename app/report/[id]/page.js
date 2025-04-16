@@ -400,9 +400,7 @@ const Page = () => {
   // const monthlyMortgage = mortgage ? (mortgage / 12).toFixed(2) : null;
   const taxes = report.all_property_tax?.[0];
   const insurance = report.all_insurance[0] | 'NA';
-  const rent = report.all_RM?.[0];
-  const managementFeePercent = 0.08;
-  const managementFees = rent ? -(rent * managementFeePercent).toFixed(2) : null;
+  const managementFees = report?.all_management[0];
   const otherExpenses = [
     report.all_HOA?.[0] || 0,
     report.all_water?.[0] || 0,
@@ -412,10 +410,10 @@ const Page = () => {
   ];
   // const othersTotal = -otherExpenses.reduce((sum, val) => sum + val, 0);
   // const arv = Math.round(report.all_ending_balance[report.all_ending_balance.length - 2]);
-  const allBalances = report.all_ending_balance || [];
-  const valueOverTime = allBalances.slice(-6, -1);
-  const totalYears = allBalances.length;
-  const years = Array.from({ length: valueOverTime.length }, (_, i) => `Year ${totalYears - 5 + i}`);
+  const allBalances = report.all_revenue || [];
+  const currentYear = new Date().getFullYear();
+  const startYear = currentYear - allBalances.length + 1;
+  const years = Array.from({ length: allBalances.length }, (_, i) => startYear + i);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -440,7 +438,7 @@ const Page = () => {
     },
     {
       icon: <AiFillHome />,
-      value: report.property_subtype,
+      value: report?.property_type !== undefined ? report?.property_type : report?.property_subtype !== null ? report?.property_subtype : 'NA',
     }
   ];
 
@@ -472,16 +470,23 @@ const Page = () => {
     }
   ];
 
+  const getChartHeight = () => {
+    const width = window.innerWidth;
+    if (width <= 500) return 250;
+    if (width <= 768) return 300;
+    if (width <= 1200) return 350;
+    if (width <= 1600) return 375;
+    return 485;
+  };
+
   const options = {
     chart: {
       type: 'area',
-      height: 310,
+      height: getChartHeight(),
+      reflow: true,
     },
     title: {
       text: null
-    },
-    xAxis: {
-      visible: false,
     },
     xAxis: {
       categories: years,
@@ -519,13 +524,35 @@ const Page = () => {
     },
     series: [{
       name: 'Ending Balance',
-      data: valueOverTime,
+      data: allBalances,
       color: '#3290ED'
     }],
     credits: {
       enabled: false
     },
-    legend: false
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      area: {
+        fillOpacity: 0.2,
+        marker: {
+          enabled: false,
+          states: {
+            hover: {
+              enabled: true
+            }
+          }
+        }
+      },
+      series: {
+        states: {
+          hover: {
+            enabled: true
+          }
+        }
+      }
+    }
   };
 
   const propertyValue = [
@@ -534,7 +561,7 @@ const Page = () => {
       value: report.property_type || 'NA'
     },
     {
-      label: 'Subtype',
+      label: 'Property Subtype',
       value: report.property_subtype
     },
     {
@@ -1107,13 +1134,12 @@ const Page = () => {
         <Content className="customBodyWrapper">
           <div className="topSection">
             <div className="tagSection">
-              APARTMENTS
+              {report?.property_type !== undefined ? report?.property_type : report?.property_subtype !== null ? report?.property_subtype : 'NA'}
             </div>
 
             <Row gutter={16} className="propertyInfoRow">
               <Col md={18} xs={24} className="propertyDetailColumn">
                 <div className='propertyHeader'>
-                  {/* <h2>Conscient Elaira Residences</h2> */}
                   <span className="locationWrapper"><FaLocationDot />{createFullAddress(report)}</span>
                   <div className="tagWrapper">
                     {tags.map((tag, index) => (
@@ -1143,7 +1169,7 @@ const Page = () => {
             <Row gutter={16}>
               <Col md={18} xs={24}>
                 <div className="bannerImage">
-                  <Image src={report?.image} alt="Not Found" className="img-fluid" preview={false} />
+                  <Image src={report?.image} alt="Not Found" className="img-fluid" />
                 </div>
               </Col>
               <Col md={6} xs={24}>
@@ -1153,7 +1179,7 @@ const Page = () => {
                     <div className="bottom"><span className="grey">{Formatter.formatUSD(projections.acquisitionCosts)}</span><IoMdArrowForward /> {Formatter.formatUSD(arv)}</div>
                   </div> */}
                   <div className="valueGraph">
-                    <div className="top">Value</div>
+                    <div className="top">Revenue</div>
                     <div className="bottom">
                       <div style={{ borderRadius: '0 0 8px 8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', width: '100%' }}>
                         <HighchartsReact highcharts={Highcharts} options={options} />
@@ -1338,7 +1364,7 @@ const Page = () => {
         </div>
 
       </Layout>
-<Footer />
+      <Footer />
     </div>
   );
 };

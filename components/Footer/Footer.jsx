@@ -26,9 +26,9 @@ const EstimateFooter = () => {
           <Col xs={24} sm={8} md={6} lg={6}>
             <Title level={5}>Resources</Title>
             <ul className="footer-links">
-              <li><Link href="/calculator">ROI Calculator</Link></li>
-              <li><Link href="/mortgage">Mortgage Analysis</Link></li>
-              <li><Link href="/market-trends">Market Trends</Link></li>
+              <li><Link href="/dashboard">ROI Calculator</Link></li>
+              <li><Link href="/dashboard">Mortgage Analysis</Link></li>
+              <li><Link href="/dashboard">Market Trends</Link></li>
             </ul>
           </Col>
 
@@ -37,8 +37,8 @@ const EstimateFooter = () => {
             <Title level={5}>Company</Title>
             <ul className="footer-links">
               <li><Link href="/about">About Us</Link></li>
-              <li><Link href="/contact">Contact</Link></li>
-              <li><Link href="/faq">FAQ</Link></li>
+              <li><Link href="https://discord.gg/RXmpKUqz">Contact</Link></li>
+              <li><Link href="/FAQ">FAQ</Link></li>
             </ul>
           </Col>
 
